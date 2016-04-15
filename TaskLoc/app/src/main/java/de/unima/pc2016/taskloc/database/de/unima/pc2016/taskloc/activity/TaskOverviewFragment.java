@@ -10,7 +10,7 @@ import de.unima.pc2016.taskloc.R;
 /**
  * Created by sven on 15.04.16.
  */
-public class OneFragment extends Fragment{
+public class TaskOverviewFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

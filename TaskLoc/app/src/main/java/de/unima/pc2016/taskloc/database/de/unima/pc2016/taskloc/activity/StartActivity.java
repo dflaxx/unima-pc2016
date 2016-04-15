@@ -11,6 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import com.google.android.gms.maps.SupportMapFragment;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,12 +37,14 @@ public class StartActivity extends AppCompatActivity{
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new OneFragment(), "Task Overview");
-        adapter.addFragment(new TwoFragment(), "Map View");
+        MapsOverviewFragment mapsFragment = new MapsOverviewFragment();
+        adapter.addFragment(new TaskOverviewFragment(), "Task Overview");
+        adapter.addFragment(mapsFragment, "Map View");
         viewPager.setAdapter(adapter);
     }
 
