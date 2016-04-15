@@ -9,8 +9,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".database.TestDBActivity"
+            android:name=".database.de.unima.pc2016.taskloc.activity.TestDBActivity"
             android:label="@string/title_activity_test_db"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <activity
+            android:name=".database.de.unima.pc2016.taskloc.activity.StartActivity"
+            android:label="@string/title_activity_start"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
