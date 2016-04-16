@@ -1,4 +1,4 @@
-package de.unima.pc2016.taskloc.database.de.unima.pc2016.taskloc.activity;
+package de.unima.pc2016.taskloc.application.activities;
 
 
 
@@ -10,8 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-
-import com.google.android.gms.maps.SupportMapFragment;
 
 import java.util.ArrayList;
 import java.util.List;

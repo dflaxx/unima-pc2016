@@ -1,4 +1,4 @@
-package de.unima.pc2016.taskloc.database;
+package de.unima.pc2016.taskloc.application.database;
 
 import android.location.Location;
 

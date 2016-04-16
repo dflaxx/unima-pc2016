@@ -6,4 +6,4 @@
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="de.unima.pc2016.taskloc.database.de.unima.pc2016.taskloc.activity.StartActivity" />
+    tools:context=".application.activities.StartActivity" />

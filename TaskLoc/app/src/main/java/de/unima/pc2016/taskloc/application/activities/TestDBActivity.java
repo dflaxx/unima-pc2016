@@ -1,4 +1,4 @@
-package de.unima.pc2016.taskloc.database.de.unima.pc2016.taskloc.activity;
+package de.unima.pc2016.taskloc.application.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import de.unima.pc2016.taskloc.R;
-import de.unima.pc2016.taskloc.database.CreateTestData;
+import de.unima.pc2016.taskloc.application.database.CreateTestData;
 
 public class TestDBActivity extends AppCompatActivity {
 

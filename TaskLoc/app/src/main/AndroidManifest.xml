@@ -19,11 +19,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".database.de.unima.pc2016.taskloc.activity.TestDBActivity"
+            android:name=".application.activities.TestDBActivity"
             android:label="@string/title_activity_test_db"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".database.de.unima.pc2016.taskloc.activity.StartActivity"
+            android:name=".application.activities.StartActivity"
             android:label="@string/title_activity_start"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -45,7 +45,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".database.de.unima.pc2016.taskloc.activity.MapsActivity"
+            android:name=".application.de.unima.pc2016.taskloc.acitivty.MapsActivity"
             android:label="@string/title_activity_maps"></activity>
     </application>
 

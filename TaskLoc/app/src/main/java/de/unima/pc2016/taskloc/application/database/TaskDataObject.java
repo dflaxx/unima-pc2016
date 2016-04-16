@@ -1,15 +1,12 @@
-package de.unima.pc2016.taskloc.database;
+package de.unima.pc2016.taskloc.application.database;
 
 import android.location.Location;
 import android.util.Log;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * Created by sven on 14.04.16.

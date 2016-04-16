@@ -1,4 +1,4 @@
-package de.unima.pc2016.taskloc.database.de.unima.pc2016.taskloc.activity;
+package de.unima.pc2016.taskloc.application.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

@@ -1,8 +1,4 @@
-package de.unima.pc2016.taskloc.database;
-
-import android.location.Location;
-
-import java.util.List;
+package de.unima.pc2016.taskloc.application.database;
 
 /**
  * Created by sven on 14.04.16.

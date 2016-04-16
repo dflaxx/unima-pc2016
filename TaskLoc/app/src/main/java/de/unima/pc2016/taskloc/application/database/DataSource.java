@@ -1,4 +1,4 @@
-package de.unima.pc2016.taskloc.database;
+package de.unima.pc2016.taskloc.application.database;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -120,7 +120,7 @@ public class DataSource {
     public void clearAllTasks(){
         String deleteAll = "DELETE FROM "+DBHelper.TASK_TABLE_NAME+";";
         this.getWritableDB().execSQL(deleteAll);
-        Log.d(TAG,"Deleted all old Tasks");
+        Log.d(TAG, "Deleted all old Tasks");
     }
     public void deleteTaskByID(int id){
 

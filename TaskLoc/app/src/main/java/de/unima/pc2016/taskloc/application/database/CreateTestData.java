@@ -1,7 +1,6 @@
-package de.unima.pc2016.taskloc.database;
+package de.unima.pc2016.taskloc.application.database;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Date;
