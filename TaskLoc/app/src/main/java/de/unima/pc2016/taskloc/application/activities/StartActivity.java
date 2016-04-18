@@ -25,11 +25,6 @@ public class StartActivity extends AppCompatActivity{
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private DataSource dataSource;
-
-    public DataSource getDataSource() {
-        return dataSource;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +40,6 @@ public class StartActivity extends AppCompatActivity{
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-
-        dataSource = new DataSource(this.getApplicationContext());
     }
 
     private void setupViewPager(ViewPager viewPager) {

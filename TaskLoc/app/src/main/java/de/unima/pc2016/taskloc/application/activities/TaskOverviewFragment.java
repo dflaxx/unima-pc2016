@@ -27,23 +27,24 @@ import de.unima.pc2016.taskloc.application.database.TaskDataObject;
  */
 public class TaskOverviewFragment extends Fragment{
     private final String TAG="TaskOverviewFragment";
-    protected ArrayAdapter<TaskDataObject> taskListAdapter;
+   // protected ArrayAdapter<TaskDataObject> taskListAdapter;
     protected List<TaskDataObject> list;
+    protected TaskListAdapter taskListAdapter;
     protected DataSource dataSource;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(
-                R.layout.fragment_task, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_task, container, false);
 
 
         CreateTestData ts = new CreateTestData(container.getContext());
 
-        DataSource dataSource = new DataSource(rootView.getContext());
-        dataSource = new DataSource(container.getContext());
+        dataSource = new DataSource(rootView.getContext());
+
 
         list = new ArrayList<TaskDataObject>();
-        taskListAdapter = new ArrayAdapter<TaskDataObject>(rootView.getContext(), R.layout.listview_tasklist, list);
+        //taskListAdapter = new ArrayAdapter<TaskDataObject>(rootView.getContext(), R.layout.listview_tasklist, list);
+        taskListAdapter = new TaskListAdapter(rootView.getContext(),null ,null);
         ListView listView = (ListView) rootView.findViewById(R.id.task_list);
         listView.setAdapter(taskListAdapter);
 
@@ -73,7 +74,6 @@ public class TaskOverviewFragment extends Fragment{
         protected List<TaskDataObject> doInBackground(DataSource... dataSource) {
             //SQLiteDatabase database = dataSources[0].getReadableDB();
             List<TaskDataObject> currentTaskList =  dataSource[0].getAllTask();
-            Log.d(TAG,"Received Tasks");
             return currentTaskList;
         }
 
@@ -82,8 +82,7 @@ public class TaskOverviewFragment extends Fragment{
             if (currentTaskList != null) {
                 taskListAdapter.clear();
                 for (TaskDataObject aktienString : currentTaskList) {
-                    Log.d(TAG, "Neue Task hinzugefügt");
-                    taskListAdapter.add(aktienString);
+                    taskListAdapter.addTask(aktienString);
                 }
             }
 

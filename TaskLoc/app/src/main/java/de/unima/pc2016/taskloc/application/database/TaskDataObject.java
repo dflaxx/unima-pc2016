@@ -106,6 +106,6 @@ public class TaskDataObject {
     }
 
     public String toString(){
-        return this.getTitle()+" "+this.getDescription()+" ";
+        return this.getTitle();
     }
 }

@@ -61,8 +61,8 @@ public class DBHelper  extends SQLiteOpenHelper{
     //SQL Create Table Task
     public static final String SQL_CREATE_TASK = "CREATE TABLE " + TASK_TABLE_NAME +
             "(" + TASK_COLUMN_TASK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            TASK_COLUMN_DESCRIPTION+ " TEXT NOT NULL, " +
             TASK_COLUMN_TITLE+" TEXT NOT NULL, "+
+            TASK_COLUMN_DESCRIPTION+ " TEXT NOT NULL, " +
             TASK_COLUMN_START_DATE + " TEXT NOT NULL, " +
             TASK_COLUMN_END_DATE + " TEXT NOT NULL, " +
             TASK_COLUMN_RANGE + " INTEGER NOT NULL);";
