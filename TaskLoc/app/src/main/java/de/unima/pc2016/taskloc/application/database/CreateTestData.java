@@ -28,9 +28,9 @@ public class CreateTestData {
         Date d1 =cal.getTime();
         Date d2 = cal.getTime();
 
-        //ds.createNewTask("Shopping", "Go to SM", d1, d2, 10);
-        //ds.createNewTask("Coffee with Daisy", "I like Coffee so much, best drug ever", d1, d2, 10);
-        //ds.createNewTask("Group Meeting", "Go and meet my group", d1, d2, 10);
+        ds.createNewTask("Shopping", "Go to SM", d1, d2, 10);
+        ds.createNewTask("Coffee with Daisy", "I like Coffee so much, best drug ever", d1, d2, 10);
+        ds.createNewTask("Group Meeting", "Go and meet my group", d1, d2, 10);
         return true;
     }
 

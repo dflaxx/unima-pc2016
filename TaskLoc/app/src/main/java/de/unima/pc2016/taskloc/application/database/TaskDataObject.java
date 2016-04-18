@@ -84,9 +84,7 @@ public class TaskDataObject {
     public int getId() {
         return id;
     }
-    public String toString(){
-        return this.getTitle()+" "+this.getDescription()+" ";
-    }
+
 
     public Date getStartDate() {
         return startDate;
@@ -98,15 +96,16 @@ public class TaskDataObject {
 
     public void setStartDate(String startDate) {
         Calendar cal = Calendar.getInstance();
-        //cal.setTime(sdf.parse(startDate));
         this.startDate = cal.getTime();
-        Log.d(TAG, startDate.toString());
-        Log.d(TAG, sdf.toPattern());
     }
 
     public void setEndDate(String endDate) {
         Calendar cal = Calendar.getInstance();
         //cal.setTime(sdf.parse(endDate));
         this.endDate = cal.getTime();
+    }
+
+    public String toString(){
+        return this.getTitle()+" "+this.getDescription()+" ";
     }
 }

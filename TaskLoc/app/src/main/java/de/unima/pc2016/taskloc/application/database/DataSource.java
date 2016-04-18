@@ -103,14 +103,16 @@ public class DataSource {
 
     public List<TaskDataObject> getAllTask(){
         String selectAll = "Select * from "+ DBHelper.TASK_TABLE_NAME+";";
+        List<TaskDataObject> currentTaskList = null;
         Cursor cursor = this.getReadableDB().rawQuery(selectAll, null);
         if(cursor != null && cursor.getCount() > 0){
-            Log.d(TAG, "Task table is not empty");
-            this.createTaskOjbect(cursor);
-            return this.createTaskOjbect(cursor);
+            Log.d(TAG, cursor.getCount()+ " Tasks have been found.");
+            currentTaskList = this.createTaskOjbect(cursor);
+            return currentTaskList;
         }
+        Log.d(TAG, cursor.getCount()+ " Tasks have been found.");
         cursor.close();
-        return null;
+        return currentTaskList;
     }
     public List<TaskDataObject> getTaskByName(String name){
         return null;

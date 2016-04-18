@@ -2,6 +2,7 @@ package de.unima.pc2016.taskloc.application.activities;
 
 
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -10,17 +11,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.unima.pc2016.taskloc.R;
+import de.unima.pc2016.taskloc.application.database.DataSource;
+import de.unima.pc2016.taskloc.application.database.TaskDataObject;
 
 public class StartActivity extends AppCompatActivity{
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private DataSource dataSource;
+
+    public DataSource getDataSource() {
+        return dataSource;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +45,8 @@ public class StartActivity extends AppCompatActivity{
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+
+        dataSource = new DataSource(this.getApplicationContext());
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -74,5 +85,7 @@ public class StartActivity extends AppCompatActivity{
             return mFragmentTitleList.get(position);
         }
     }
+
+
 
 }
