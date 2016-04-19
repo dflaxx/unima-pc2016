@@ -40,7 +40,7 @@ public class DBHelper  extends SQLiteOpenHelper{
     public static final String LOCATION_COLUMN_ID = "locationID";
     public static final String LOCATION_COLUMN_LATITUDE = "latitude";
     public static final String LOCATION_COLUMN_LONGITUDE = "longitude";
-    public static final String LOCATION_COLUMN_LOCATION = "loc";
+
 
     public static final String HASPLACE_TABEL_NAME="hasplace";
     public static final String HASPLACE_COLUMN_TASK_ID="taskID";
@@ -75,17 +75,15 @@ public class DBHelper  extends SQLiteOpenHelper{
     public static final String SQL_CREATE_LOCATION = "CREATE TABLE " + LOCATION_TABLE_NAME +
             "(" + LOCATION_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             LOCATION_COLUMN_LATITUDE + " TEXT NOT NULL, " +
-            LOCATION_COLUMN_LONGITUDE + " TEXT NOT NULL, " +
-            LOCATION_COLUMN_LOCATION + " TEXT NOT NULL);";
+            LOCATION_COLUMN_LONGITUDE + " TEXT NOT NULL);";
 
     public static final String SQL_CREATE_HASPLACE = "CREATE TABLE " + HASPLACE_TABEL_NAME +
             "(" +
-            HASPLACE_COLUMN_LOCATION_ID + " TEXT NOT NULL, " +
-            HASPLACE_COLUMN_TASK_ID + " TEXT NOT NULL, " +
-            LOCATION_COLUMN_LOCATION + " TEXT NOT NULL," +
+            HASPLACE_COLUMN_LOCATION_ID + " INTEGER NOT NULL, " +
+            HASPLACE_COLUMN_TASK_ID + " INTEGER NOT NULL, " +
             "PRIMARY KEY("+HASPLACE_COLUMN_TASK_ID+","+HASPLACE_COLUMN_LOCATION_ID+"), "+
-            "FOREIGN KEY("+HASPLACE_COLUMN_LOCATION_ID+") REFERENCES "+LOCATION_TABLE_NAME+"("+ LOCATION_COLUMN_ID+"), "+
-            "FOREIGN KEY("+HASPLACE_COLUMN_TASK_ID+") REFERENCES "+TASK_TABLE_NAME+"("+ TASK_COLUMN_TASK_ID+"));";
+            "FOREIGN KEY("+HASPLACE_COLUMN_LOCATION_ID+") REFERENCES "+LOCATION_TABLE_NAME+"("+ LOCATION_COLUMN_ID+") ON DELETE CASCADE, "+
+            "FOREIGN KEY("+HASPLACE_COLUMN_TASK_ID+") REFERENCES "+TASK_TABLE_NAME+"("+ TASK_COLUMN_TASK_ID+") ON DELETE CASCADE);";
 
 
     public DBHelper(Context context){
@@ -93,7 +91,6 @@ public class DBHelper  extends SQLiteOpenHelper{
         Log.d(LOG_TAG, "DbHelper hat die Datenbank: " + getDatabaseName() + " erzeugt.");
         this.db = this.getWritableDatabase();
         if (!db.isReadOnly()) {
-            // Enable foreign key constraints
             db.execSQL("PRAGMA foreign_keys=ON;");
         }
         this.onCreate(db);

@@ -44,7 +44,7 @@ public class TaskOverviewFragment extends Fragment{
 
         list = new ArrayList<TaskDataObject>();
         //taskListAdapter = new ArrayAdapter<TaskDataObject>(rootView.getContext(), R.layout.listview_tasklist, list);
-        taskListAdapter = new TaskListAdapter(rootView.getContext(),null ,null);
+        taskListAdapter = new TaskListAdapter(rootView.getContext(),dataSource);
         ListView listView = (ListView) rootView.findViewById(R.id.task_list);
         listView.setAdapter(taskListAdapter);
 

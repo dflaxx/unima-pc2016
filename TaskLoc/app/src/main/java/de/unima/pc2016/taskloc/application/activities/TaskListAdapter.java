@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.unima.pc2016.taskloc.R;
+import de.unima.pc2016.taskloc.application.database.DataSource;
 import de.unima.pc2016.taskloc.application.database.TaskDataObject;
 
 /**
@@ -24,21 +25,49 @@ public class TaskListAdapter extends BaseAdapter {
     private List<TaskDataObject> taskList;
     private LayoutInflater mInflater;
     private Context context;
+    private DataSource dataSource;
 
 
-
-    public TaskListAdapter(Context context, ArrayList d, Resources res){
+    public TaskListAdapter(Context context, DataSource dataSource){
         super();
         this.context = context;
         taskList = new ArrayList<TaskDataObject>();
         mInflater = ( LayoutInflater ) context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.dataSource = dataSource;
     }
 
     public void addTask(TaskDataObject newTask){
         taskList.add(newTask);
         Log.d(TAG,"Update Adapter was called for "+ newTask.getTitle());
         notifyDataSetChanged();
+    }
+
+    public void removeTaskByID(int id){
+        int counter = 0;
+        Thread t1 = new DeleteTaskFromDatabaseThread(id,dataSource);
+        t1.start();
+        for(TaskDataObject tmp : taskList){
+            if(tmp.getId() == id){
+                taskList.remove(counter);
+                break;
+            }
+            counter++;
+        }
+        notifyDataSetChanged();
+
+    }
+
+    private class DeleteTaskFromDatabaseThread extends Thread{
+        private int taskID;
+        private DataSource ds;
+        public DeleteTaskFromDatabaseThread(int taskID, DataSource ds){
+            this.taskID = taskID;
+            this.ds = ds;
+        }
+        public void run(){
+            ds.deleteTask(taskID);
+        }
     }
     public void clear(){
         taskList.clear();
@@ -75,8 +104,8 @@ public class TaskListAdapter extends BaseAdapter {
             TaskDataObject currTaskObject = taskList.get(position);
             holder = (TaskViewHolder) vi.getTag();
             holder.taskDescription.setText(currTaskObject.getTitle());
-            holder.taskDescription.setOnClickListener(new OnItemClickListener(position));
-            Log.d(TAG,taskList.get(position).getTitle()+ " was added to List view");
+            holder.taskDescription.setOnClickListener(new OnItemClickListener(position, currTaskObject.getId()));
+            holder.btnTaskDone.setOnClickListener(new TaskDoneListener(position, currTaskObject.getId()));
         //}
         return vi;
     }
@@ -84,15 +113,30 @@ public class TaskListAdapter extends BaseAdapter {
 
     private class OnItemClickListener  implements View.OnClickListener {
         private int mPosition;
-
-        OnItemClickListener(int position){
+        private int id;
+        OnItemClickListener(int position, int id){
             mPosition = position;
-
+            this.id = id;
         }
 
         @Override
         public void onClick(View arg0) {
             Log.d(TAG, taskList.get(mPosition)+ " was selected");
+        }
+    }
+
+    private class TaskDoneListener implements View.OnClickListener{
+        private int position;
+        private int id;
+
+        TaskDoneListener(int position, int id){
+            this.position = position;
+            this.id = id;
+        }
+
+
+        public void onClick(View view){
+            removeTaskByID(id);
         }
     }
 
