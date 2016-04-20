@@ -313,7 +313,6 @@ public class DataSource {
                     attributes[i] = c.getString(i);
                     test = test + " "+ attributes[i] + " ";
                 }
-
                 String taskId = attributes[5]; //At this position the id is saved
                 List<LocationDataObject> locPerTask = new ArrayList<LocationDataObject>();
                 Log.d(TAG, "Comparison Object: " + c.getString(5));
@@ -328,8 +327,6 @@ public class DataSource {
                         LocationDataObject locationDataObject = new LocationDataObject();
                         //locationDataObject.setLocation(c.getString();
                     }
-
-
                 }
                 c.moveToPrevious();
 
@@ -339,7 +336,6 @@ public class DataSource {
                 taskList.add(tmp);
                 tmp = null;
             }while(c.moveToNext());
-
         }
         c.close();
         Log.d(TAG, "TaskList: "+taskList.size());
