@@ -85,7 +85,7 @@
             android:id="@+id/rangeBar"
             android:layout_gravity="center_horizontal"
             android:clickable="true"
-            android:max="2000"/>
+            android:max="2000" />
 
         <TextView
             android:layout_width="wrap_content"
