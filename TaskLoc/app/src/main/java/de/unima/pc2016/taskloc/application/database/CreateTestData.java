@@ -20,6 +20,8 @@ public class CreateTestData {
         this.createTaskData();
         this.creatLocationData();
         this.createConnection();
+        ds.getAllTaskWithLocation();
+
     }
 
     public boolean createTaskData(){

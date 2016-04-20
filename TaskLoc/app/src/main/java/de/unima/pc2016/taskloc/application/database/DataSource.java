@@ -20,7 +20,6 @@ public class DataSource {
     private Context context;
 
     public DataSource(Context context) {
-        Log.d(TAG, "Unsere DataSource erzeugt jetzt den dbHelper.");
         this.context = context;
         this.dbHelper = new DBHelper(this.context);
     }
@@ -95,7 +94,7 @@ public class DataSource {
                 endTime.toString()+"', "+
                 range+");";
          this.getWritableDB().execSQL(createNewTask);
-        Log.d(TAG, "New Task: " + title + " was created");
+
     }
 
 
@@ -113,17 +112,35 @@ public class DataSource {
 
     public List<TaskDataObject> getAllTask(){
         String selectAll = "Select * from "+ DBHelper.TASK_TABLE_NAME+";";
+
         List<TaskDataObject> currentTaskList = null;
         Cursor cursor = this.getReadableDB().rawQuery(selectAll, null);
         if(cursor != null && cursor.getCount() > 0){
-            Log.d(TAG, cursor.getCount()+ " Tasks have been found.");
+
             currentTaskList = this.createTaskOjbect(cursor);
             return currentTaskList;
         }
-        Log.d(TAG, cursor.getCount()+ " Tasks have been found.");
         cursor.close();
         return currentTaskList;
     }
+
+    public List<TaskDataObject> getAllTaskWithLocation(){
+        String getTaskWithLocation = "SELECT * FROM (("+DBHelper.LOCATION_TABLE_NAME+
+                " AS A JOIN "+ DBHelper.HASPLACE_TABEL_NAME+
+                " AS B ON A."+ DBHelper.LOCATION_COLUMN_ID +" = B."+DBHelper.HASPLACE_COLUMN_LOCATION_ID+") AS TMP JOIN "+
+                DBHelper.TASK_TABLE_NAME+ " AS C ON C."+ DBHelper.TASK_COLUMN_TASK_ID+" = TMP."+DBHelper.HASPLACE_COLUMN_TASK_ID
+                +") ORDER BY TMP."+DBHelper.TASK_COLUMN_TASK_ID+" ASC;";
+        List<TaskDataObject> currentTaskList = null;
+        Cursor cursor = this.getReadableDB().rawQuery(getTaskWithLocation, null);
+        if(cursor != null && cursor.getCount() > 0){
+            Log.d(TAG, "Task with Location was found");
+            currentTaskList = this.createTaskWithLocation(cursor);
+            return currentTaskList;
+        }
+        cursor.close();
+        return currentTaskList;
+    }
+
     public List<TaskDataObject> getTaskByName(String name){
         return null;
     }
@@ -132,13 +149,12 @@ public class DataSource {
     public void clearAllTasks(){
         String deleteAll = "DELETE FROM "+DBHelper.TASK_TABLE_NAME+";";
         this.getWritableDB().execSQL(deleteAll);
-        Log.d(TAG, "Deleted all old Tasks");
+
     }
     public void deleteTaskByID(int id){
         String deleteByID = "DELETE FROM "+ DBHelper.TASK_TABLE_NAME+
                 "WHERE "+DBHelper.TASK_COLUMN_TASK_ID+ " = "+id+";";
         this.getWritableDB().execSQL(deleteByID);
-        Log.d(TAG, "Deleted all old Tasks");
     }
 
 
@@ -155,6 +171,7 @@ public class DataSource {
      */
     public List<LocationDataObject> getAllLocation(){
         String getLoc = "Select *  from "+DBHelper.LOCATION_TABLE_NAME+";";
+
         Cursor cursor = this.getReadableDB().rawQuery(getLoc,null);
 
         if(cursor != null && cursor.getCount()>0){
@@ -176,7 +193,7 @@ public class DataSource {
                 latitude+"', '"+
                 longitude+");";
         this.getWritableDB().execSQL(createNewTask);
-        Log.d(TAG, "New Location was added to the database");
+
     }
     public void createLocation(Location location){
         String createNewTask = "INSERT INTO "+DBHelper.LOCATION_TABLE_NAME+" ("+
@@ -187,25 +204,24 @@ public class DataSource {
                 location.getLatitude()+"', '"+
                 location.getLongitude()+"');";
         this.getWritableDB().execSQL(createNewTask);
-        Log.d(TAG, "New Location was added to the database");
+
     }
     public void deleteLocation(int locationID){
         String deleteLoc = "DELETE FROM "+DBHelper.LOCATION_TABLE_NAME+
                 " WHERE "+DBHelper.LOCATION_COLUMN_ID+" = "+locationID+";";
         this.getWritableDB().execSQL(deleteLoc);
-        Log.d(TAG, "Deleted location "+ locationID);
+
     }
     public void clearAllLocations(){
         String deleteAllLocation = "DELETE FROM "+ DBHelper.LOCATION_TABLE_NAME+";";
         this.getWritableDB().execSQL(deleteAllLocation);
-        Log.d(TAG, "Deleted all old Locations");
+
     }
 
     /*
         HAS_PLACE TABLE
      */
     public void connectLocationWithPlace(int taskID,List<Integer> locations){
-
         for(Integer tmpLocation : locations){
             String con = "INSERT INTO "+DBHelper.HASPLACE_TABEL_NAME+" ("+
                     DBHelper.HASPLACE_COLUMN_TASK_ID+", "+
@@ -215,11 +231,10 @@ public class DataSource {
             this.getWritableDB().execSQL(con);
 
         }
-        Log.d(TAG, "Task was connected to "+locations.size());
+
     }
 
     public void connectLocationWithPlace(List<LocationDataObject> locations, int taskID){
-
         for(LocationDataObject tmpLocation : locations){
             String con = "INSERT INTO "+DBHelper.HASPLACE_TABEL_NAME+" ("+
                     DBHelper.HASPLACE_COLUMN_TASK_ID+", "+
@@ -229,21 +244,27 @@ public class DataSource {
             this.getWritableDB().execSQL(con);
 
         }
-        Log.d(TAG, "Task was connected to "+locations.size());
+
     }
+
 
     /*
     Create Task Objects
      */
     public List<TaskDataObject> createTaskOjbect(Cursor c){
         List<TaskDataObject> taskList = new ArrayList<TaskDataObject>();
+        Log.d(TAG, "Start creating Task Objects");
         if(c!=null){
             c.moveToFirst();
             do{
                 String[] attributes = new String[c.getColumnCount()];
+                String test = "";
                 for(int i=0; i<c.getColumnCount(); i++){
                     attributes[i] = c.getString(i);
+                    test = test + " "+ attributes[i] + " ";
                 }
+                Log.d(TAG, "Join: "+ test);
+                test = "";
                 TaskDataObject tmp = new TaskDataObject(attributes);
                 taskList.add(tmp);
                 tmp = null;
@@ -262,6 +283,7 @@ public class DataSource {
             c.moveToFirst();
             do{
                 String[] attributes = new String[c.getColumnCount()];
+
                 for(int i=0; i<c.getColumnCount(); i++){ //ID does not need to be saved in Location Object --> Start from one
                     attributes[i] = c.getString(i);
                 }
@@ -278,4 +300,52 @@ public class DataSource {
         c.close();
         return locationList;
     }
+
+    public List<TaskDataObject> createTaskWithLocation(Cursor c){
+        List<TaskDataObject> taskList = new ArrayList<TaskDataObject>();
+        Log.d(TAG, "Start creating Task Objects " + c.getCount());
+        if(c!=null){
+            c.moveToFirst();
+            do{
+                String[] attributes = new String[c.getColumnCount()];
+                String test = "";
+                for(int i=0; i<c.getColumnCount(); i++){
+                    attributes[i] = c.getString(i);
+                    test = test + " "+ attributes[i] + " ";
+                }
+
+                String taskId = attributes[5]; //At this position the id is saved
+                List<LocationDataObject> locPerTask = new ArrayList<LocationDataObject>();
+                Log.d(TAG, "Comparison Object: " + c.getString(5));
+                Log.d(TAG, "Write Location Data: "+ taskId);
+                while(c.moveToNext()){
+                    if(!c.getString(5).equals(taskId)){
+                        Log.d(TAG, "Compare "+ taskId +" with "+ c.getString(5));
+                        break;
+                    }else{
+                        //Write Location-Object
+                        Log.d(TAG, "Write Location Data: "+ taskId);
+                        LocationDataObject locationDataObject = new LocationDataObject();
+                        //locationDataObject.setLocation(c.getString();
+                    }
+
+
+                }
+                c.moveToPrevious();
+
+                Log.d(TAG, "Output: "+ test);
+                test = "";
+                TaskDataObject tmp = new TaskDataObject(attributes, locPerTask);
+                taskList.add(tmp);
+                tmp = null;
+            }while(c.moveToNext());
+
+        }
+        c.close();
+        Log.d(TAG, "TaskList: "+taskList.size());
+        return taskList;
+
+    }
+
+
 }

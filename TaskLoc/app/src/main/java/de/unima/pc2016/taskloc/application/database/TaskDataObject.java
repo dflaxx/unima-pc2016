@@ -18,7 +18,7 @@ public class TaskDataObject {
     private Date startDate;
     private Date endDate;
     private int range;
-    private List<Location> locations;
+    private List<LocationDataObject> locations;
     SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
 
     private String TAG = "TaskDataObject";
@@ -43,6 +43,16 @@ public class TaskDataObject {
         this.setRange(range);
     }
 
+    public TaskDataObject(String[] attributes, List<LocationDataObject> locations){
+        this.setId(Integer.parseInt(attributes[0]));
+        this.setTitle(attributes[1]);
+        this.setDescription(attributes[2]);
+        this.setStartDate(attributes[3]);
+        this.setEndDate(attributes[4]);
+        this.setRange(Integer.parseInt(attributes[5]));
+        this.locations = locations;
+    }
+
     public TaskDataObject(String[] attributes){
         this.setId(Integer.parseInt(attributes[0]));
         this.setTitle(attributes[1]);
@@ -50,6 +60,7 @@ public class TaskDataObject {
         this.setStartDate(attributes[3]);
         this.setEndDate(attributes[4]);
         this.setRange(Integer.parseInt(attributes[5]));
+        this.locations = locations;
     }
 
     public String getTitle() {
