@@ -1,6 +1,5 @@
-package de.unima.pc2016.taskloc;
+package de.unima.pc2016.taskloc.application.activities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
@@ -18,11 +17,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import de.unima.pc2016.taskloc.R;
+
 
 public class AddNewTask extends AppCompatActivity {
 
     //constant
-    private static final String MSG_NO_INPUT = "Please insert missing information.";
+    private static final String MSG_NO_INPUT = "Please insert Task title.";
 
 
     //EditText & TextView
@@ -45,7 +46,12 @@ public class AddNewTask extends AppCompatActivity {
 
 
 
+
+
     protected void onCreate(Bundle savedInstanceState) {
+        //Intents
+        final Intent main = new Intent(AddNewTask.this, StartActivity.class);
+        final Intent map = new Intent (AddNewTask.this, MapsOverviewFragment.class);
 
         super.onCreate(savedInstanceState);
 
@@ -97,7 +103,7 @@ public class AddNewTask extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                       // startActivity(map);
+                        startActivity(map);
 
                     }
                 });
@@ -163,7 +169,7 @@ public class AddNewTask extends AppCompatActivity {
                 Toast.makeText(v.getContext(), MSG_NO_INPUT, Toast.LENGTH_LONG).show();
                 }
                 else{
-                   // startActivity(main);
+                    startActivity(main);
                 }
             }
         });
@@ -172,7 +178,7 @@ public class AddNewTask extends AppCompatActivity {
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // startActivity(main);
+                startActivity(main);
             }
         });
 

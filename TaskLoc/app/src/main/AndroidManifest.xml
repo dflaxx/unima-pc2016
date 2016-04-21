@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".AddNewTask"
+            android:name=".application.activities.AddNewTask"
             android:label="@string/title_activity_add_new_task"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
