@@ -23,25 +23,6 @@ public class TaskDataObject {
 
     private String TAG = "TaskDataObject";
 
-    public TaskDataObject(){
-
-    }
-    public TaskDataObject(int id,String title, String description, String startDate, String endDate, int range) {
-        this.setId(id);
-        this.setTitle(title);
-        this.setDescription(description);
-        this.setStartDate(startDate);
-        this.setEndDate(endDate);
-        this.setRange(range);
-    }
-    public TaskDataObject(int id,String title, String description, String startDate, String endDate, int range, Location location){
-        this.setId(id);
-        this.setTitle(title);
-        this.setDescription(description);
-        this.setStartDate(startDate);
-        this.setEndDate(endDate);
-        this.setRange(range);
-    }
 
     public TaskDataObject(String[] attributes, List<LocationDataObject> locations){
         this.setId(Integer.parseInt(attributes[0]));
@@ -60,7 +41,7 @@ public class TaskDataObject {
         this.setStartDate(attributes[3]);
         this.setEndDate(attributes[4]);
         this.setRange(Integer.parseInt(attributes[5]));
-        this.locations = locations;
+
     }
 
     public String getTitle() {
@@ -114,6 +95,10 @@ public class TaskDataObject {
         Calendar cal = Calendar.getInstance();
         //cal.setTime(sdf.parse(endDate));
         this.endDate = cal.getTime();
+    }
+
+    public List<LocationDataObject> getLocations(){
+        return this.locations;
     }
 
     public String toString(){
