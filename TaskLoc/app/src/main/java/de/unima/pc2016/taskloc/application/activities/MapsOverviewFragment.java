@@ -53,8 +53,8 @@ public class MapsOverviewFragment extends Fragment implements OnMapReadyCallback
         Log.d("MapsOverviewFragment", "Maps callback called");
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        //mMap.addMarker(new MarkerOptions().position(sydney).title("Sydney"));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         LoadTaskInBackground loadTaskList = new LoadTaskInBackground();
         loadTaskList.execute();
 

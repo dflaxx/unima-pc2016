@@ -40,34 +40,6 @@ public class DataSource {
         return dbHelper.getReadableDatabase();
     }
 
-    /*
-     * USER-Queries
-     */
-    public List<UserTaskObject> getAllUser(){
-        String getAllUser = "Select * from"+DBHelper.USER_TABLE_NAME;
-        Cursor cursor =this.getReadableDB().rawQuery(getAllUser, null);
-        return null;
-    }
-    public void getUserByID(int id){
-        String getByID = "Select from "+DBHelper.USER_TABLE_NAME+
-                " WHERE "+DBHelper.USER_COLUMN_USER_ID+" = "+id+";";
-    }
-    public void createNewUser(String name, String surname, int age, String streetName, String livingPlace){
-        String createUser = "Insert INTO ("+DBHelper.TASK_TABLE_NAME+", "+
-                DBHelper.USER_COLUMN_USER_ID+", "+
-                DBHelper.USER_COLUMN_USER_NAME+", "+
-                DBHelper.USER_COLUMN_USER_SURNAME+", "+
-                DBHelper.USER_COLUMN_USER_AGE+", "+
-                DBHelper.USER_COLUMN_STREET+", "+
-                DBHelper.USER_COLUMN_LIVING_PLACE+") VALUES("+
-                "NULL, '"+
-                name+", '"+
-                surname+"', "+
-                age+"', "+
-                streetName+", '"+
-                livingPlace+"');";
-        this.getWritableDB().execSQL(createUser);
-    }
 
     /*
      * Task-Queries
@@ -140,12 +112,14 @@ public class DataSource {
                 +") ORDER BY TMP."+DBHelper.TASK_COLUMN_TASK_ID+" ASC;";
         List<TaskDataObject> currentTaskList = null;
         Cursor cursor = this.getReadableDB().rawQuery(getTaskWithLocation, null);
+        this.printJoin(cursor);
         if(cursor != null && cursor.getCount() > 0){
             Log.d(TAG, "Task with Location was found");
             Log.d(TAG, cursor.toString());
             currentTaskList = this.createTaskWithLocation(cursor);
             return currentTaskList;
         }
+
         cursor.close();
         return currentTaskList;
     }
@@ -169,13 +143,7 @@ public class DataSource {
 
     /*
      *
-     *
-     *
-     *
      *Location-Queries
-     *
-     *
-     *
      *
      */
     public List<LocationDataObject> getAllLocation(){
@@ -230,32 +198,20 @@ public class DataSource {
     /*
         HAS_PLACE TABLE
      */
-    public void connectLocationWithPlace(int taskID,List<Integer> locations){
-        for(Integer tmpLocation : locations){
-            String con = "INSERT INTO "+DBHelper.HASPLACE_TABEL_NAME+" ("+
-                    DBHelper.HASPLACE_COLUMN_TASK_ID+", "+
-                    DBHelper.TASK_COLUMN_RANGE+") VALUES ("+
-                    tmpLocation+", "+
-                    taskID+");";
-            this.getWritableDB().execSQL(con);
-
-        }
-
-    }
-
-    public void connectLocationWithPlace(List<LocationDataObject> locations, int taskID){
+    public void connectLocationWithPlace(int taskID, List<LocationDataObject> locations){
         for(LocationDataObject tmpLocation : locations){
             String con = "INSERT INTO "+DBHelper.HASPLACE_TABEL_NAME+" ("+
                     DBHelper.HASPLACE_COLUMN_TASK_ID+", "+
                     DBHelper.HASPLACE_COLUMN_LOCATION_ID+") VALUES ("+
-                    tmpLocation.getId()+", "+
-                    taskID+");";
+                    taskID+", "+
+                    tmpLocation.getId()+");";
             this.getWritableDB().execSQL(con);
+            //TODO: Das Muss später auskommentiert werden
+            this.printHasPlace();
 
         }
 
     }
-
 
     /*
     Create Task Objects
@@ -322,13 +278,17 @@ public class DataSource {
                     attributes[i] = c.getString(i);
                     test = test + " "+ attributes[i] + " ";
                 }
-                String taskId = attributes[5]; //At this position the id is saved
+                String taskId = attributes[0]; //At this position the id is saved
                 List<LocationDataObject> locPerTask = new ArrayList<LocationDataObject>();
 
-
+                LocationDataObject ldo = new LocationDataObject();
+                ldo.setLocation(Integer.parseInt(c.getString(8)),
+                        Double.parseDouble(c.getString(9)),Double.parseDouble(c.getString(10)));
+                locPerTask.add(ldo);
 
                 while(c.moveToNext()){
-                    if(!c.getString(5).equals(taskId)){
+
+                    if(!c.getString(8).equals(taskId)){ //At this position the id is saved
                         break;
                     }else{
                         LocationDataObject locationDataObject = new LocationDataObject();
@@ -347,9 +307,44 @@ public class DataSource {
             }while(c.moveToNext());
         }
         c.close();
-        Log.d(TAG, "TaskList: "+taskList.size());
+        Log.d(TAG, "TaskList: " + taskList.size());
         return taskList;
 
+    }
+
+    public void printHasPlace(){
+        String sql = "SELECT * FROM "+DBHelper.HASPLACE_TABEL_NAME+";";
+        Cursor c = this.getReadableDB().rawQuery(sql,null);
+        if(c != null){
+            c.moveToFirst();
+            do{
+                String[] attributes = new String[c.getColumnCount()];
+                String test = "";
+                for(int i=0; i<c.getColumnCount(); i++){
+                    attributes[i] = c.getString(i);
+                    test = test + " "+ attributes[i] + " ";
+                }
+                Log.d(TAG, "Print: "+ test);
+                test = "";
+            }while(c.moveToNext());
+        }
+    }
+
+    public void printJoin(Cursor c){
+        //Cursor c = this.getReadableDB().rawQuery(sql,null);
+        if(c != null){
+            c.moveToFirst();
+            do{
+                String[] attributes = new String[c.getColumnCount()];
+                String test = "";
+                for(int i=0; i<c.getColumnCount(); i++){
+                    attributes[i] = c.getString(i);
+                    test = test + " "+ attributes[i] + " ";
+                }
+                Log.d(TAG, "Tasktable: "+ test);
+                test = "";
+            }while(c.moveToNext());
+        }
     }
 
 

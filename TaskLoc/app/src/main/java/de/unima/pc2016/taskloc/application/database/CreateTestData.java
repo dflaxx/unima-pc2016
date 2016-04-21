@@ -2,6 +2,7 @@ package de.unima.pc2016.taskloc.application.database;
 
 import android.content.Context;
 import android.location.Location;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,8 +51,8 @@ public class CreateTestData {
         tmpLoc2.setLongitude(43);
 
         Location tmpLoc3 = new Location("");
-        tmpLoc3.setLatitude(1);
-        tmpLoc3.setLongitude(103);
+        tmpLoc3.setLatitude(49);
+        tmpLoc3.setLongitude(8);
 
         ds.createLocation(tmpLoc1);
         ds.createLocation(tmpLoc2);
@@ -63,7 +64,8 @@ public class CreateTestData {
         List<TaskDataObject> taskList = ds.getAllTask();
         List<LocationDataObject> locationList = ds.getAllLocation();
         List<LocationDataObject> tmp = new ArrayList<LocationDataObject>();
-        ds.connectLocationWithPlace(locationList, taskList.get(0).getId());
+        Log.d("CreateTestData", "ID: "+ taskList.get(0).getId()+ " Size: "+ locationList.size());
+        ds.connectLocationWithPlace(taskList.get(0).getId(), locationList);
        /*int counter = 0;
         for(TaskDataObject currTask : taskList){
             tmp.add(locationList.get(0));
