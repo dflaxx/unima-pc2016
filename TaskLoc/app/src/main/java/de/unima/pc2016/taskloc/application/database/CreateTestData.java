@@ -3,6 +3,7 @@ package de.unima.pc2016.taskloc.application.database;
 import android.content.Context;
 import android.location.Location;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -41,16 +42,17 @@ public class CreateTestData {
     public boolean creatLocationData(){
         ds.clearAllLocations();
         Location tmpLoc1 = new Location("");
-        tmpLoc1.setLatitude(32.122098);
-        tmpLoc1.setLongitude(34.795655);
+        tmpLoc1.setLatitude(35);
+        tmpLoc1.setLongitude(139);
 
         Location tmpLoc2 = new Location("");
-        tmpLoc2.setLatitude(49.487442);
-        tmpLoc2.setLongitude(8.466043);
+        tmpLoc2.setLatitude(22);
+        tmpLoc2.setLongitude(43);
 
         Location tmpLoc3 = new Location("");
-        tmpLoc3.setLatitude(49.473976);
-        tmpLoc3.setLongitude(8.607746);
+        tmpLoc3.setLatitude(1);
+        tmpLoc3.setLongitude(103);
+
         ds.createLocation(tmpLoc1);
         ds.createLocation(tmpLoc2);
         ds.createLocation(tmpLoc3);
@@ -60,9 +62,14 @@ public class CreateTestData {
     public boolean createConnection(){
         List<TaskDataObject> taskList = ds.getAllTask();
         List<LocationDataObject> locationList = ds.getAllLocation();
+        List<LocationDataObject> tmp = new ArrayList<LocationDataObject>();
+        ds.connectLocationWithPlace(locationList, taskList.get(0).getId());
+       /*int counter = 0;
         for(TaskDataObject currTask : taskList){
-           ds.connectLocationWithPlace(locationList, currTask.getId());
-        }
+            tmp.add(locationList.get(0));
+            ds.connectLocationWithPlace(tmp, currTask.getId());
+            counter++;
+        }*/
         return true;
     }
 

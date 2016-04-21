@@ -19,9 +19,17 @@ public class DataSource {
     private DBHelper dbHelper;
     private Context context;
 
+    private static DataSource ds;
     public DataSource(Context context) {
         this.context = context;
         this.dbHelper = new DBHelper(this.context);
+    }
+
+    public static DataSource instance(Context context){
+        if(DataSource.ds == null){
+            DataSource.ds = new DataSource(context);
+        }
+        return DataSource.ds;
     }
 
     public SQLiteDatabase getWritableDB(){
@@ -125,15 +133,16 @@ public class DataSource {
     }
 
     public List<TaskDataObject> getAllTaskWithLocation(){
-        String getTaskWithLocation = "SELECT * FROM (("+DBHelper.LOCATION_TABLE_NAME+
+        String getTaskWithLocation = "SELECT * FROM (("+DBHelper.TASK_TABLE_NAME+
                 " AS A JOIN "+ DBHelper.HASPLACE_TABEL_NAME+
-                " AS B ON A."+ DBHelper.LOCATION_COLUMN_ID +" = B."+DBHelper.HASPLACE_COLUMN_LOCATION_ID+") AS TMP JOIN "+
-                DBHelper.TASK_TABLE_NAME+ " AS C ON C."+ DBHelper.TASK_COLUMN_TASK_ID+" = TMP."+DBHelper.HASPLACE_COLUMN_TASK_ID
+                " AS B ON A."+ DBHelper.TASK_COLUMN_TASK_ID +" = B."+DBHelper.HASPLACE_COLUMN_TASK_ID+") AS TMP JOIN "+
+                DBHelper.LOCATION_TABLE_NAME+ " AS C ON C."+ DBHelper.HASPLACE_COLUMN_LOCATION_ID+" = TMP."+DBHelper.LOCATION_COLUMN_ID
                 +") ORDER BY TMP."+DBHelper.TASK_COLUMN_TASK_ID+" ASC;";
         List<TaskDataObject> currentTaskList = null;
         Cursor cursor = this.getReadableDB().rawQuery(getTaskWithLocation, null);
         if(cursor != null && cursor.getCount() > 0){
             Log.d(TAG, "Task with Location was found");
+            Log.d(TAG, cursor.toString());
             currentTaskList = this.createTaskWithLocation(cursor);
             return currentTaskList;
         }
@@ -263,7 +272,7 @@ public class DataSource {
                     attributes[i] = c.getString(i);
                     test = test + " "+ attributes[i] + " ";
                 }
-                Log.d(TAG, "Join: "+ test);
+                //Log.d(TAG, "Join: "+ test);
                 test = "";
                 TaskDataObject tmp = new TaskDataObject(attributes);
                 taskList.add(tmp);
@@ -315,17 +324,17 @@ public class DataSource {
                 }
                 String taskId = attributes[5]; //At this position the id is saved
                 List<LocationDataObject> locPerTask = new ArrayList<LocationDataObject>();
-                Log.d(TAG, "Comparison Object: " + c.getString(5));
-                Log.d(TAG, "Write Location Data: "+ taskId);
+
+
+
                 while(c.moveToNext()){
                     if(!c.getString(5).equals(taskId)){
-                        Log.d(TAG, "Compare "+ taskId +" with "+ c.getString(5));
                         break;
                     }else{
-                        //Write Location-Object
-                        Log.d(TAG, "Write Location Data: "+ taskId);
                         LocationDataObject locationDataObject = new LocationDataObject();
-                        //locationDataObject.setLocation(c.getString();
+                        locationDataObject.setLocation(Integer.parseInt(c.getString(8)),
+                                Double.parseDouble(c.getString(9)),Double.parseDouble(c.getString(10)));
+                        locPerTask.add(locationDataObject);
                     }
                 }
                 c.moveToPrevious();

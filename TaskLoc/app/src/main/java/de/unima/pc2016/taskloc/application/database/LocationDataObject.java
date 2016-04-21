@@ -26,9 +26,17 @@ public class LocationDataObject {
     public Location geLocation(){
        return this.location;
     }
-
+    public Double getLatitude(){
+        return location.getLatitude();
+    }
+    public Double getLongitude(){
+        return location.getLongitude();
+    }
     public int getId(){
         return id;
+    }
+    public LocationDataObject getElement(){
+        return this;
     }
 
 }

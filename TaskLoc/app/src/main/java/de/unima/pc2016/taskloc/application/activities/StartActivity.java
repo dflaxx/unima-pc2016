@@ -33,6 +33,8 @@ public class StartActivity extends AppCompatActivity{
     private ViewPager viewPager;
     private FloatingActionButton fbAddAction;
     private Context context;
+    public MapsOverviewFragment mapsFragment;
+    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +57,10 @@ public class StartActivity extends AppCompatActivity{
     }
 
     private void setupViewPager(ViewPager viewPager) {
+        fragmentManager = this.getSupportFragmentManager();
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        MapsOverviewFragment mapsFragment = new MapsOverviewFragment();
+        mapsFragment = new MapsOverviewFragment();
+
         adapter.addFragment(new TaskOverviewFragment(), "Task Overview");
         adapter.addFragment(mapsFragment, "Map View");
         viewPager.setAdapter(adapter);
@@ -92,7 +96,6 @@ public class StartActivity extends AppCompatActivity{
     }
 
     public class AddNewTaskListener implements View.OnClickListener{
-
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(context, AddNewTask.class);
