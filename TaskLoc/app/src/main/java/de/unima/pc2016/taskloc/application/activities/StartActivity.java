@@ -20,7 +20,6 @@ import android.widget.ArrayAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.unima.pc2016.taskloc.AddNewTask;
 
 import de.unima.pc2016.taskloc.R;
 import de.unima.pc2016.taskloc.application.database.DataSource;

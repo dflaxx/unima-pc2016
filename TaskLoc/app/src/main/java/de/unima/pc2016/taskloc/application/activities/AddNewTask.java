@@ -103,7 +103,7 @@ public class AddNewTask extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        startActivity(map);
+                       // startActivity(map);
 
                     }
                 });
@@ -222,6 +222,8 @@ public class AddNewTask extends AppCompatActivity {
 
         });
     }
+
+
 
 
 
