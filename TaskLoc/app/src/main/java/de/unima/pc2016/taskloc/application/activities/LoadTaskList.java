@@ -15,7 +15,7 @@ public class LoadTaskList extends AsyncTask<DataSource, List<TaskDataObject>, Li
     @Override
     protected List<TaskDataObject> doInBackground(DataSource... dataSources) {
         //SQLiteDatabase database = dataSources[0].getReadableDB();
-        List<TaskDataObject> currentTaskList =  dataSources[0].getAllTask();
+        List<TaskDataObject> currentTaskList =  dataSources[0].getAllTaskWithLocation();
         return currentTaskList;
     }
 
