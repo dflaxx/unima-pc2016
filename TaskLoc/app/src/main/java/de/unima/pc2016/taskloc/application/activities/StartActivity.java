@@ -30,6 +30,7 @@ public class StartActivity extends AppCompatActivity{
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private ViewPagerAdapter viewPagerAdapter;
     private FloatingActionButton fbAddAction;
     private Context context;
     public MapsOverviewFragment mapsFragment;
@@ -53,19 +54,22 @@ public class StartActivity extends AppCompatActivity{
         fbAddAction = (FloatingActionButton) findViewById(R.id.fabAddTask);
         fbAddAction.setOnClickListener(new AddNewTaskListener());
 
+        viewPager.setOnPageChangeListener(new FragmentChanged());
+
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        fragmentManager = this.getSupportFragmentManager();
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+        this.viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         mapsFragment = new MapsOverviewFragment();
 
-        adapter.addFragment(new TaskOverviewFragment(), "Task Overview");
-        adapter.addFragment(mapsFragment, "Map View");
-        viewPager.setAdapter(adapter);
+        viewPagerAdapter.addFragment(new TaskOverviewFragment(), "Task Overview");
+        viewPagerAdapter.addFragment(mapsFragment, "Map View");
+        viewPager.setAdapter(viewPagerAdapter);
     }
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
+    public class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
@@ -99,6 +103,25 @@ public class StartActivity extends AppCompatActivity{
         public void onClick(View view) {
             Intent intent = new Intent(context, AddNewTask.class);
             startActivity(intent);
+        }
+    }
+
+    public class FragmentChanged implements ViewPager.OnPageChangeListener{
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            //viewPagerAdapter.getItem(position).onPause();
+            viewPagerAdapter.getItem(position).onResume();
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
         }
     }
 

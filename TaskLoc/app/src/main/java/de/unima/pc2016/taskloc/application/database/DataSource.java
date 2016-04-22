@@ -82,6 +82,7 @@ public class DataSource {
         String deleteTask = "DELETE FROM "+DBHelper.TASK_TABLE_NAME+" WHERE "+
                 DBHelper.TASK_COLUMN_TASK_ID+"="+Integer.toString(id)+";";
         this.getWritableDB().execSQL(deleteTask);
+        Log.d(TAG, "Task was deleted");
     }
 
     public List<TaskDataObject> getTaskByID(int id){
@@ -112,10 +113,8 @@ public class DataSource {
                 +") ORDER BY TMP."+DBHelper.TASK_COLUMN_TASK_ID+" ASC;";
         List<TaskDataObject> currentTaskList = null;
         Cursor cursor = this.getReadableDB().rawQuery(getTaskWithLocation, null);
-        this.printJoin(cursor);
         if(cursor != null && cursor.getCount() > 0){
-            Log.d(TAG, "Task with Location was found");
-            Log.d(TAG, cursor.toString());
+            this.printJoin(cursor);
             currentTaskList = this.createTaskWithLocation(cursor);
             return currentTaskList;
         }
@@ -218,7 +217,7 @@ public class DataSource {
      */
     public List<TaskDataObject> createTaskOjbect(Cursor c){
         List<TaskDataObject> taskList = new ArrayList<TaskDataObject>();
-        Log.d(TAG, "Start creating Task Objects");
+        //Log.d(TAG, "Start creating Task Objects");
         if(c!=null){
             c.moveToFirst();
             do{
@@ -283,7 +282,7 @@ public class DataSource {
 
                 LocationDataObject ldo = new LocationDataObject();
                 ldo.setLocation(Integer.parseInt(c.getString(8)),
-                        Double.parseDouble(c.getString(9)),Double.parseDouble(c.getString(10)));
+                        Double.parseDouble(c.getString(9)), Double.parseDouble(c.getString(10)));
                 locPerTask.add(ldo);
 
                 while(c.moveToNext()){
@@ -299,7 +298,7 @@ public class DataSource {
                 }
                 c.moveToPrevious();
 
-                Log.d(TAG, "Output: "+ test);
+                //Log.d(TAG, "Output: "+ test);
                 test = "";
                 TaskDataObject tmp = new TaskDataObject(attributes, locPerTask);
                 taskList.add(tmp);
@@ -307,7 +306,7 @@ public class DataSource {
             }while(c.moveToNext());
         }
         c.close();
-        Log.d(TAG, "TaskList: " + taskList.size());
+        //Log.d(TAG, "TaskList: " + taskList.size());
         return taskList;
 
     }
@@ -324,7 +323,7 @@ public class DataSource {
                     attributes[i] = c.getString(i);
                     test = test + " "+ attributes[i] + " ";
                 }
-                Log.d(TAG, "Print: "+ test);
+                //Log.d(TAG, "Print: "+ test);
                 test = "";
             }while(c.moveToNext());
         }
@@ -341,7 +340,7 @@ public class DataSource {
                     attributes[i] = c.getString(i);
                     test = test + " "+ attributes[i] + " ";
                 }
-                Log.d(TAG, "Tasktable: "+ test);
+                //Log.d(TAG, "Tasktable: "+ test);
                 test = "";
             }while(c.moveToNext());
         }

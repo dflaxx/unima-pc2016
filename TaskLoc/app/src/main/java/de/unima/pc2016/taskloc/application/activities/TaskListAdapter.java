@@ -137,6 +137,7 @@ public class TaskListAdapter extends BaseAdapter {
 
         public void onClick(View view){
             removeTaskByID(id);
+            DataSource.instance(context).deleteTask(id);
         }
     }
 

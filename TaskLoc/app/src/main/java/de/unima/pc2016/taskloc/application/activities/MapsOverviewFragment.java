@@ -63,16 +63,22 @@ public class MapsOverviewFragment extends Fragment implements OnMapReadyCallback
     @Override
     public void onStart(){
         super.onStart();
+        LoadTaskInBackground loadTaskList = new LoadTaskInBackground();
+        loadTaskList.execute();
     }
 
     @Override
     public void onResume(){
         super.onResume();
+        LoadTaskInBackground loadTaskList = new LoadTaskInBackground();
+        loadTaskList.execute();
+
     }
 
     @Override
     public void onPause(){
         super.onPause();
+        Log.d(TAG, "On Pause is called");
     }
 
     public class LoadTaskInBackground extends AsyncTask<String, String, List<TaskDataObject>> {
@@ -83,7 +89,8 @@ public class MapsOverviewFragment extends Fragment implements OnMapReadyCallback
 
         @Override
         protected void onPostExecute(List<TaskDataObject> currentTaskList){
-            Log.d(TAG, "Try to add new marker to the map");
+            //Log.d(TAG, "Try to add new marker to the map");
+            mMap.clear();
             if (currentTaskList != null) {
                for(TaskDataObject taskDataObject: currentTaskList){
                    if(taskDataObject.getLocations().size() > 0){

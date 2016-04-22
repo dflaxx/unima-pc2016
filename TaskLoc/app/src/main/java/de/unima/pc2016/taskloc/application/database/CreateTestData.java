@@ -64,7 +64,7 @@ public class CreateTestData {
         List<TaskDataObject> taskList = ds.getAllTask();
         List<LocationDataObject> locationList = ds.getAllLocation();
         List<LocationDataObject> tmp = new ArrayList<LocationDataObject>();
-        Log.d("CreateTestData", "ID: "+ taskList.get(0).getId()+ " Size: "+ locationList.size());
+
         ds.connectLocationWithPlace(taskList.get(0).getId(), locationList);
        /*int counter = 0;
         for(TaskDataObject currTask : taskList){
