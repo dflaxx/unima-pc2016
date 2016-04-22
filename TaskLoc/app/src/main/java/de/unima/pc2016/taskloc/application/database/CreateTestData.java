@@ -33,9 +33,9 @@ public class CreateTestData {
         Date d1 =cal.getTime();
         Date d2 = cal.getTime();
 
-        ds.createNewTask("Grocery Shopping", "Description: 1", d1, d2, 10);
-        ds.createNewTask("Coffee with Daisy", "Description: 2", d1, d2, 10);
-        ds.createNewTask("Group Meeting for PC", "Description: 3", d1, d2, 10);
+        ds.createNewTask("Grocery Shopping", "Description: 1", d1, d2, 200);
+        ds.createNewTask("Coffee with Daisy", "Description: 2", d1, d2, 200);
+        ds.createNewTask("Group Meeting for PC", "Description: 3", d1, d2, 200);
         return true;
 
     }
@@ -51,8 +51,8 @@ public class CreateTestData {
         tmpLoc2.setLongitude(43);
 
         Location tmpLoc3 = new Location("");
-        tmpLoc3.setLatitude(49);
-        tmpLoc3.setLongitude(8);
+        tmpLoc3.setLatitude(49.473538);
+        tmpLoc3.setLongitude(8.474838);
 
         ds.createLocation(tmpLoc1);
         ds.createLocation(tmpLoc2);

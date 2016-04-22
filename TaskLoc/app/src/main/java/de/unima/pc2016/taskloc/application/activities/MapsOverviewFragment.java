@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.List;
 
 import de.unima.pc2016.taskloc.R;
+import de.unima.pc2016.taskloc.application.Geofences.GeofenceController;
 import de.unima.pc2016.taskloc.application.database.DataSource;
 import de.unima.pc2016.taskloc.application.database.LocationDataObject;
 import de.unima.pc2016.taskloc.application.database.TaskDataObject;
@@ -50,8 +51,9 @@ public class MapsOverviewFragment extends Fragment implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        Log.d("MapsOverviewFragment", "Maps callback called");
+
         // Add a marker in Sydney and move the camera
+        //TODO: Show a different marker for the current location
         LatLng sydney = new LatLng(34, 151);
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Sydney"));
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
@@ -78,7 +80,7 @@ public class MapsOverviewFragment extends Fragment implements OnMapReadyCallback
     @Override
     public void onPause(){
         super.onPause();
-        Log.d(TAG, "On Pause is called");
+
     }
 
     public class LoadTaskInBackground extends AsyncTask<String, String, List<TaskDataObject>> {
@@ -95,17 +97,15 @@ public class MapsOverviewFragment extends Fragment implements OnMapReadyCallback
                for(TaskDataObject taskDataObject: currentTaskList){
                    if(taskDataObject.getLocations().size() > 0){
                        for(LocationDataObject location: taskDataObject.getLocations()){
-                           Log.v(TAG, "Try to add: "+ location.getLatitude() + " "+ location.getLongitude());
                            LatLng currLatIng = new LatLng(location.getLatitude(), location.getLongitude());
                            mMap.addMarker(new MarkerOptions().position(currLatIng).title(taskDataObject.getTitle()));
                        }
                    }else{
                        Log.d(TAG, "No location was assigend to the task");
                    }
-
-
                }
-            }
+                GeofenceController.instance(context).addGeofencesToList(currentTaskList);
+            }//End if
 
         }
 

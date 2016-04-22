@@ -22,10 +22,11 @@ import java.util.List;
 
 
 import de.unima.pc2016.taskloc.R;
+import de.unima.pc2016.taskloc.application.Geofences.GeofenceController;
 import de.unima.pc2016.taskloc.application.database.DataSource;
 import de.unima.pc2016.taskloc.application.database.TaskDataObject;
 
-public class StartActivity extends AppCompatActivity{
+public class StartActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
@@ -34,7 +35,7 @@ public class StartActivity extends AppCompatActivity{
     private FloatingActionButton fbAddAction;
     private Context context;
     public MapsOverviewFragment mapsFragment;
-    private FragmentManager fragmentManager;
+    private GeofenceController geofenceController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +55,8 @@ public class StartActivity extends AppCompatActivity{
         fbAddAction = (FloatingActionButton) findViewById(R.id.fabAddTask);
         fbAddAction.setOnClickListener(new AddNewTaskListener());
 
-        viewPager.setOnPageChangeListener(new FragmentChanged());
-
+        viewPager.setOnPageChangeListener(new FragmentChanged()); //Needed so the onStop and onResume methods are called
+         this.geofenceController = GeofenceController.instance(this.getApplicationContext());
 
     }
 
