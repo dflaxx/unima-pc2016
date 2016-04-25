@@ -27,5 +27,7 @@ public class GeofenceTransitionsIntentService extends IntentService{
     protected void onHandleIntent(Intent intent) {
         int i= 5;
         Log.d(TAG, "onHandlIntent called");
+
+        //ToDo: Start Notification
     }
 }

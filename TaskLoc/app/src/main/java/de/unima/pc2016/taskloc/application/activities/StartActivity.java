@@ -4,7 +4,6 @@ package de.unima.pc2016.taskloc.application.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -15,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
-import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +21,6 @@ import java.util.List;
 
 import de.unima.pc2016.taskloc.R;
 import de.unima.pc2016.taskloc.application.Geofences.GeofenceController;
-import de.unima.pc2016.taskloc.application.database.DataSource;
-import de.unima.pc2016.taskloc.application.database.TaskDataObject;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -56,9 +52,11 @@ public class StartActivity extends AppCompatActivity {
         fbAddAction.setOnClickListener(new AddNewTaskListener());
 
         viewPager.setOnPageChangeListener(new FragmentChanged()); //Needed so the onStop and onResume methods are called
-         this.geofenceController = GeofenceController.instance(this.getApplicationContext());
+         this.geofenceController = GeofenceController.getInstance(this.getApplicationContext());
 
     }
+
+
 
     private void setupViewPager(ViewPager viewPager) {
 

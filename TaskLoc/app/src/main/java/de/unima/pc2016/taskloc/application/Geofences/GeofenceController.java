@@ -12,6 +12,8 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
@@ -25,7 +27,7 @@ import de.unima.pc2016.taskloc.application.database.TaskDataObject;
 /**
  * Created by sven on 22.04.16.
  */
-public class GeofenceController implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class GeofenceController implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status> {
 
     private final String TAG="GeofenceController";
     private GoogleApiClient mGoogleApiClient;
@@ -36,7 +38,7 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks, 
 
     private static GeofenceController geofenceController;
 
-    public static synchronized GeofenceController instance(Context context){
+    public static synchronized GeofenceController getInstance(Context context){
         if(geofenceController == null){
             GeofenceController.geofenceController = new GeofenceController(context);
         }
@@ -53,12 +55,14 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks, 
                     .build();
             mGoogleApiClient.connect();
         }
-
         mGeofenceList = new ArrayList<>();
 
     }
 
-
+    /**
+     * Start Geofencin is responsible for starting and updating the Geofence list
+     * This is possible because the pending intent is updated
+     */
     public void startGeofencing(){
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && this.googleAPIConnected == false) {
             // TODO: Consider calling
@@ -75,6 +79,30 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks, 
         LocationServices.GeofencingApi.addGeofences(mGoogleApiClient, getGeofencingRequest(), getGeofencePendingIntent());
     }
 
+    public void stopGeofencing(){
+        LocationServices.GeofencingApi.removeGeofences(
+                mGoogleApiClient,
+                // This is the same pending intent that was used in addGeofences().
+                getGeofencePendingIntent()
+        ).setResultCallback(this); // Result processed in onResult().
+
+    }
+
+
+    public void removeTaskFromGeofenceList(int id){
+        for(Geofence geofence: this.mGeofenceList){
+            if(geofence.getRequestId().equals(id)){
+                Log.d(TAG, "Task is deleted from Geofence");
+                this.mGeofenceList.remove(geofence);
+                this.startGeofencing();
+            }
+        }
+    }
+
+    public void clearAllTasks(){
+        this.stopGeofencing();
+    }
+
     public void addTaskToGeofenceList(TaskDataObject tdo){
         for(LocationDataObject locationDataObject: tdo.getLocations()){
             mGeofenceList.add(new Geofence.Builder()
@@ -88,14 +116,17 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks, 
                     .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
                     .build());
         }
+    }
 
+    public void addTask(TaskDataObject tdo){
+        this.addTaskToGeofenceList(tdo);
+        this.startGeofencing();
     }
 
     public void addGeofencesToList(List<TaskDataObject> taskDataObjectList){
         for(TaskDataObject tdo : taskDataObjectList){
             this.addTaskToGeofenceList(tdo);
         }
-
         if(this.googleAPIConnected == true){
             this.startGeofencing();
         }
@@ -149,4 +180,12 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks, 
     }
 
 
+    /**
+     * This method is called after the geofencing request is stopped
+     * @param status
+     */
+    @Override
+    public void onResult(Status status) {
+        this.mGeofenceList.clear();
+    }
 }

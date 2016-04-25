@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.unima.pc2016.taskloc.R;
+import de.unima.pc2016.taskloc.application.Geofences.GeofenceController;
 import de.unima.pc2016.taskloc.application.database.DataSource;
 import de.unima.pc2016.taskloc.application.database.TaskDataObject;
 
@@ -125,6 +126,9 @@ public class TaskListAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * Click Listener if task should be deleted from the list
+     */
     private class TaskDoneListener implements View.OnClickListener{
         private int position;
         private int id;
@@ -137,7 +141,20 @@ public class TaskListAdapter extends BaseAdapter {
 
         public void onClick(View view){
             removeTaskByID(id);
-            DataSource.instance(context).deleteTask(id);
+            Thread deleteFromDatabase = new Thread(){
+                public void run(){
+                    DataSource.instance(context).deleteTask(id);
+                }
+            };
+            deleteFromDatabase.start();
+
+            Thread deleteFromGeofence = new Thread(){
+                public void run(){
+                    GeofenceController.getInstance(context).removeTaskFromGeofenceList(id);
+                }
+            };
+
+
         }
     }
 
