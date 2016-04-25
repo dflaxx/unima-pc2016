@@ -90,7 +90,9 @@ public class MapsOverviewFragment extends Fragment implements OnMapReadyCallback
         @Override
         protected void onPostExecute(List<TaskDataObject> currentTaskList){
             //Log.d(TAG, "Try to add new marker to the map");
-            mMap.clear();
+            if(mMap == null){
+                return;
+            }
             if (currentTaskList != null) {
                for(TaskDataObject taskDataObject: currentTaskList){
                    if(taskDataObject.getLocations().size() > 0){

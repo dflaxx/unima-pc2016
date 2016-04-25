@@ -100,7 +100,8 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks, 
     }
 
     public void clearAllTasks(){
-        this.stopGeofencing();
+        if(this.mGeofenceList != null && this.mGeofenceList.size() >0 )
+            this.stopGeofencing();
     }
 
     public void addTaskToGeofenceList(TaskDataObject tdo){
