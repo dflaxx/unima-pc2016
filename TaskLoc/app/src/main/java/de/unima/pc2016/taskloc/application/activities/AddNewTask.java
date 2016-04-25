@@ -2,6 +2,7 @@ package de.unima.pc2016.taskloc.application.activities;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,8 +17,12 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import android.util.Log;
 
 import de.unima.pc2016.taskloc.R;
+import de.unima.pc2016.taskloc.application.database.CreateTestData;
+import de.unima.pc2016.taskloc.application.database.DataSource;
+import de.unima.pc2016.taskloc.application.database.TaskDataObject;
 
 
 public class AddNewTask extends AppCompatActivity {
@@ -41,7 +46,7 @@ public class AddNewTask extends AppCompatActivity {
 
     //SeekBar
     private SeekBar rangeBar = null;
-    //private int outputRange = rangeBar.getProgress();
+
 
 
 
@@ -87,7 +92,7 @@ public class AddNewTask extends AppCompatActivity {
         txtDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String strTaskDescription = txtDescription.getText().toString();
+                 String strTaskDescription = txtDescription.getText().toString();
             }
         });
 
@@ -103,7 +108,7 @@ public class AddNewTask extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                       // startActivity(map);
+                       startActivity(map);
 
                     }
                 });
@@ -169,6 +174,11 @@ public class AddNewTask extends AppCompatActivity {
                 Toast.makeText(v.getContext(), MSG_NO_INPUT, Toast.LENGTH_LONG).show();
                 }
                 else{
+                    //Log.d("AddNewTask","insert into DB");
+                  // DataSource.instance(AddNewTask.this).createNewTask(txtInsertTitle.getText().toString(),
+                      //     txtDescription.getText().toString(), dateFrom.getText().toString(),
+                        //   dateTo.getText().toString(), rangeBar.getProgress());
+                    //Log.d("AddNewTask", "move to main");
                     startActivity(main);
                 }
             }
