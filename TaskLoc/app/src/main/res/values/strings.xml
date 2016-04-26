@@ -12,6 +12,7 @@
     <string name="title_activity_start">TaskLoc</string>
     <string name="title_activity_maps">Map</string>
     <string name="google_app_id">YOUR_PROJECT_NUMBER</string>
+    <string name="title_activity_display_task">DisplayTask</string>
 
 
 </resources>
