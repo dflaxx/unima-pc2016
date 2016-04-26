@@ -1,5 +1,6 @@
 package de.unima.pc2016.taskloc.application.activities;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -30,29 +31,59 @@ public class TaskOverviewFragment extends Fragment{
    // protected ArrayAdapter<TaskDataObject> taskListAdapter;
     protected List<TaskDataObject> list;
     protected TaskListAdapter taskListAdapter;
-    protected DataSource dataSource;
+    private Context context;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_task, container, false);
 
+        context = rootView.getContext();
 
-        CreateTestData ts = new CreateTestData(container.getContext());
-
-        dataSource = new DataSource(rootView.getContext());
 
 
         list = new ArrayList<TaskDataObject>();
         //taskListAdapter = new ArrayAdapter<TaskDataObject>(rootView.getContext(), R.layout.listview_tasklist, list);
-        taskListAdapter = new TaskListAdapter(rootView.getContext(),dataSource);
+        taskListAdapter = new TaskListAdapter(rootView.getContext());
 
         ListView listView = (ListView) rootView.findViewById(R.id.task_list);
         listView.setAdapter(taskListAdapter);
 
         LoadTaskList loadTaskList = new LoadTaskList();
-        loadTaskList.execute(dataSource);
+        loadTaskList.execute(1);
 
         return rootView;
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        List<TaskDataObject> list =  DataSource.instance(context).getAllTask();
+        if(list == null)
+            return; //No elements saved
+        int currTaskAmount = list.size();
+
+        if(currTaskAmount == taskListAdapter.getCount()){
+            return; //No change
+        }
+        taskListAdapter.updateList(list);
+    }
+
+
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        List<TaskDataObject> list =  DataSource.instance(context).getAllTask();
+
+        if(list == null)
+            return; //No elements saved
+        int currTaskAmount = list.size();
+
+        if(currTaskAmount == taskListAdapter.getCount()){
+            return; //No change
+        }
+        taskListAdapter.updateList(list);
+
     }
 
     @Override
@@ -70,11 +101,11 @@ public class TaskOverviewFragment extends Fragment{
     /*
 
      */
-    private class LoadTaskList extends AsyncTask<DataSource, Integer, List<TaskDataObject>> {
+    private class LoadTaskList extends AsyncTask<Integer, Integer, List<TaskDataObject>> {
+
         @Override
-        protected List<TaskDataObject> doInBackground(DataSource... dataSource) {
-            //SQLiteDatabase database = dataSources[0].getReadableDB();
-            List<TaskDataObject> currentTaskList =  dataSource[0].getAllTask();
+        protected List<TaskDataObject> doInBackground(Integer... integers) {
+            List<TaskDataObject> currentTaskList =  DataSource.instance(context).getAllTask();
             return currentTaskList;
         }
 

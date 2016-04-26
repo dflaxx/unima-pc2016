@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -22,8 +23,10 @@ import java.util.List;
 import de.unima.pc2016.taskloc.R;
 import de.unima.pc2016.taskloc.application.Geofences.GeofenceController;
 
+
 public class StartActivity extends AppCompatActivity {
 
+    private final String TAG="StartActivity";
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -53,6 +56,13 @@ public class StartActivity extends AppCompatActivity {
 
         viewPager.setOnPageChangeListener(new FragmentChanged()); //Needed so the onStop and onResume methods are called
          this.geofenceController = GeofenceController.getInstance(this.getApplicationContext());
+
+    }
+
+    @Override
+    public void onStart(){
+        Log.d(TAG, "On start is called");
+        super.onStart();
 
     }
 
@@ -114,7 +124,6 @@ public class StartActivity extends AppCompatActivity {
 
         @Override
         public void onPageSelected(int position) {
-            //viewPagerAdapter.getItem(position).onPause();
             viewPagerAdapter.getItem(position).onResume();
         }
 

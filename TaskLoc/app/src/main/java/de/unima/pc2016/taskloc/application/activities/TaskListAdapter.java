@@ -2,6 +2,7 @@ package de.unima.pc2016.taskloc.application.activities;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,16 +27,16 @@ public class TaskListAdapter extends BaseAdapter {
     private List<TaskDataObject> taskList;
     private LayoutInflater mInflater;
     private Context context;
-    private DataSource dataSource;
 
 
-    public TaskListAdapter(Context context, DataSource dataSource){
+
+    public TaskListAdapter(Context context){
         super();
         this.context = context;
         taskList = new ArrayList<TaskDataObject>();
         mInflater = ( LayoutInflater ) context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.dataSource = dataSource;
+
     }
 
     public void addTask(TaskDataObject newTask){
@@ -44,9 +45,19 @@ public class TaskListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void updateList(List<TaskDataObject> newList){
+        if(taskList != null && taskList.size() > 0){
+            taskList.clear();
+            for(TaskDataObject tmp: newList){
+                taskList.add(tmp);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
     public void removeTaskByID(int id){
         int counter = 0;
-        Thread t1 = new DeleteTaskFromDatabaseThread(id,dataSource);
+        Thread t1 = new DeleteTaskFromDatabaseThread(id);
         t1.start();
         for(TaskDataObject tmp : taskList){
             if(tmp.getId() == id){
@@ -61,13 +72,11 @@ public class TaskListAdapter extends BaseAdapter {
 
     private class DeleteTaskFromDatabaseThread extends Thread{
         private int taskID;
-        private DataSource ds;
-        public DeleteTaskFromDatabaseThread(int taskID, DataSource ds){
+        public DeleteTaskFromDatabaseThread(int taskID){
             this.taskID = taskID;
-            this.ds = ds;
         }
         public void run(){
-            ds.deleteTask(taskID);
+            DataSource.instance(context).deleteTask(taskID);
         }
     }
     public void clear(){
