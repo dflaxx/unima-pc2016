@@ -63,7 +63,7 @@ public class StartActivity extends AppCompatActivity {
 
 
         // Just for demo usage
-        this.createNotification("TestTask1");
+        //this.createNotification("TestTask1");
     }
 
     @Override
