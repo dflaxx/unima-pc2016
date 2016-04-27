@@ -2,6 +2,7 @@ package de.unima.pc2016.taskloc.application.activities;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -56,7 +57,7 @@ public class AddNewTask extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         //Intents
         final Intent main = new Intent(AddNewTask.this, StartActivity.class);
-        final Intent map = new Intent (AddNewTask.this, MapsOverviewFragment.class);
+
 
         super.onCreate(savedInstanceState);
 
@@ -107,8 +108,10 @@ public class AddNewTask extends AppCompatActivity {
                 builder.setPositiveButton("Map", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-                       startActivity(map);
+                        android.support.v4.app.FragmentTransaction mapTransaction =
+                                getSupportFragmentManager().beginTransaction();
+                        mapTransaction.replace(R.id.mapFragmentHolder, new MapsOverviewFragment());
+                        mapTransaction.commit();
 
                     }
                 });
@@ -174,11 +177,17 @@ public class AddNewTask extends AppCompatActivity {
                 Toast.makeText(v.getContext(), MSG_NO_INPUT, Toast.LENGTH_LONG).show();
                 }
                 else{
-                    //Log.d("AddNewTask","insert into DB");
-                  // DataSource.instance(AddNewTask.this).createNewTask(txtInsertTitle.getText().toString(),
-                      //     txtDescription.getText().toString(), dateFrom.getText().toString(),
-                        //   dateTo.getText().toString(), rangeBar.getProgress());
-                    //Log.d("AddNewTask", "move to main");
+
+//                    Log.d("AddNewTask", "insert into DB");
+
+                    DataSource.instance(AddNewTask.this).createNewTask(txtInsertTitle.getText().toString(),
+                            txtDescription.getText().toString(), dateFrom.getText().toString(),
+                        dateTo.getText().toString(), rangeBar.getProgress());
+
+
+
+
+
                     startActivity(main);
                 }
             }

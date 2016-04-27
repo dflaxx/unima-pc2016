@@ -113,6 +113,12 @@
             android:id="@+id/buttonCancel"
             android:clickable="true" />
         </TableRow>
+        <FrameLayout
+            android:id="@+id/mapFragmentHolder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </FrameLayout>
 
 
     </LinearLayout>
