@@ -45,8 +45,15 @@
             android:value="@string/google_maps_key" />
 
         <activity
+            android:name=".application.activities.DisplayTask"
+            android:label="@string/title_activity_display_task"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
             android:name=".application.activities.SelectNewLocation"
-            android:label="@string/title_activity_select_new_location"></activity>
+            android:label="@string/title_activity_select_new_location">
+        </activity>
     </application>
 
 </manifest>
