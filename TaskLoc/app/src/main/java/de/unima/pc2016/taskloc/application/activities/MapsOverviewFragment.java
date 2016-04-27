@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -49,6 +50,8 @@ public class MapsOverviewFragment extends Fragment implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+
 
         // Add a marker in Sydney and move the camera
         //TODO: Show a different marker for the current location
@@ -93,6 +96,7 @@ public class MapsOverviewFragment extends Fragment implements OnMapReadyCallback
             if(mMap == null){
                 return;
             }
+            mMap.clear();
             if (currentTaskList != null) {
                for(TaskDataObject taskDataObject: currentTaskList){
                    if(taskDataObject.getLocations().size() > 0){

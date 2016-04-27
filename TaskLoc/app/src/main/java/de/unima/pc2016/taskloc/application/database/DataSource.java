@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteStatement;
 import android.location.Location;
 import android.util.Log;
 
+import com.google.android.gms.gcm.Task;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,11 +35,11 @@ public class DataSource {
         return DataSource.ds;
     }
 
-    public SQLiteDatabase getWritableDB(){
+    private SQLiteDatabase getWritableDB(){
         return dbHelper.getWritableDatabase();
     }
 
-    public SQLiteDatabase getReadableDB(){
+    private SQLiteDatabase getReadableDB(){
         return dbHelper.getReadableDatabase();
     }
 
@@ -46,12 +48,15 @@ public class DataSource {
      * Task-Queries
      */
 
+
     public void createNewTask(String title, String description, String startDate, String endDate, int range){
         String createNewTask = "Insert INTO " +DBHelper.TASK_TABLE_NAME+" ("+
+
                 DBHelper.TASK_COLUMN_TITLE+", "+
                 DBHelper.TASK_COLUMN_DESCRIPTION+", "+
                 DBHelper.TASK_COLUMN_START_DATE+", "+
                 DBHelper.TASK_COLUMN_END_DATE+", "+
+
                 DBHelper.TASK_COLUMN_RANGE+") VALUES(?,?,?,?,?)";
         SQLiteStatement stmt = this.getWritableDB().compileStatement(createNewTask);
         stmt.bindString(1, ""+title); //Double quto to cater for nulls
@@ -78,8 +83,9 @@ public class DataSource {
                 endTime.toString()+"', "+
                 range+");";
          this.getWritableDB().execSQL(createNewTask);
-
     }
+
+
 
 
     public void deleteTask(int id){
@@ -92,7 +98,7 @@ public class DataSource {
     public List<TaskDataObject> getTaskByID(int id){
         String selectTask = "Select * from "+ DBHelper.TASK_TABLE_NAME+" WHERE"+
                 DBHelper.TASK_COLUMN_TASK_ID+"="+id+";";
-        return null;
+        return new ArrayList<TaskDataObject>();
     }
 
     public List<TaskDataObject> getAllTask(){
@@ -101,7 +107,6 @@ public class DataSource {
         List<TaskDataObject> currentTaskList = null;
         Cursor cursor = this.getReadableDB().rawQuery(selectAll, null);
         if(cursor != null && cursor.getCount() > 0){
-
             currentTaskList = this.createTaskOjbect(cursor);
             return currentTaskList;
         }
@@ -128,7 +133,7 @@ public class DataSource {
     }
 
     public List<TaskDataObject> getTaskByName(String name){
-        return null;
+        return new ArrayList<TaskDataObject>();
     }
 
 
@@ -157,30 +162,31 @@ public class DataSource {
         if(cursor != null && cursor.getCount()>0){
             return this.creatLocationObjects(cursor);
         }else{
-            return null;
+            return new ArrayList<LocationDataObject>(); //return empty list
         }
 
     }
-    public TaskDataObject getLocationByName(String name){
-        return null;
-    }
-    public void createLocation(String name, String latitude, String longitude){
+    public void createLocation(String locationName, String latitude, String longitude){
         String createNewTask = "INSERT INTO "+DBHelper.LOCATION_TABLE_NAME+" ("+
                 DBHelper.LOCATION_COLUMN_ID+", "+
+                DBHelper.LOCATION_COLUMN_NAME+", "+
                 DBHelper.LOCATION_COLUMN_LATITUDE+", "+
                 DBHelper.LOCATION_COLUMN_LONGITUDE+") VALUES ("+
                 "NULL, '"+
+                locationName +"', '"+
                 latitude+"', '"+
-                longitude+");";
+                longitude+"');";
         this.getWritableDB().execSQL(createNewTask);
 
     }
-    public void createLocation(Location location){
+    public void createLocation(String locationName, Location location){
         String createNewTask = "INSERT INTO "+DBHelper.LOCATION_TABLE_NAME+" ("+
                 DBHelper.LOCATION_COLUMN_ID+", "+
+                DBHelper.LOCATION_COLUMN_NAME+", "+
                 DBHelper.LOCATION_COLUMN_LATITUDE+", "+
                 DBHelper.LOCATION_COLUMN_LONGITUDE+") VALUES ("+
                 "NULL, '"+
+                locationName +"', '"+
                 location.getLatitude()+"', '"+
                 location.getLongitude()+"');";
         this.getWritableDB().execSQL(createNewTask);
@@ -219,7 +225,7 @@ public class DataSource {
     /*
     Create Task Objects
      */
-    public List<TaskDataObject> createTaskOjbect(Cursor c){
+    private List<TaskDataObject> createTaskOjbect(Cursor c){
         List<TaskDataObject> taskList = new ArrayList<TaskDataObject>();
         //Log.d(TAG, "Start creating Task Objects");
         if(c!=null){
@@ -245,7 +251,7 @@ public class DataSource {
     /*
        Create Location Object
      */
-    public List<LocationDataObject> creatLocationObjects(Cursor c){
+    private List<LocationDataObject> creatLocationObjects(Cursor c){
         List<LocationDataObject> locationList = new ArrayList<LocationDataObject>();
         if(c!=null){
             c.moveToFirst();
@@ -258,8 +264,9 @@ public class DataSource {
                 LocationDataObject tmp = new LocationDataObject();
                 tmp.setLocation(
                         Integer.parseInt(attributes[0]),
-                        Double.parseDouble(attributes[1]),
-                        Double.parseDouble(attributes[2]));
+                        attributes[1],
+                        Double.parseDouble(attributes[2]),
+                        Double.parseDouble(attributes[3]));
                 locationList.add(tmp);
                 tmp = null;
             }while(c.moveToNext());
@@ -269,9 +276,8 @@ public class DataSource {
         return locationList;
     }
 
-    public List<TaskDataObject> createTaskWithLocation(Cursor c){
+    private List<TaskDataObject> createTaskWithLocation(Cursor c){
         List<TaskDataObject> taskList = new ArrayList<TaskDataObject>();
-        Log.d(TAG, "Start creating Task Objects " + c.getCount());
         if(c!=null){
             c.moveToFirst();
             do{
@@ -285,18 +291,17 @@ public class DataSource {
                 List<LocationDataObject> locPerTask = new ArrayList<LocationDataObject>();
 
                 LocationDataObject ldo = new LocationDataObject();
-                ldo.setLocation(Integer.parseInt(c.getString(8)),
-                        Double.parseDouble(c.getString(9)), Double.parseDouble(c.getString(10)));
+                ldo.setLocation(Integer.parseInt(c.getString(8)),c.getString(9),
+                        Double.parseDouble(c.getString(10)), Double.parseDouble(c.getString(11)));
                 locPerTask.add(ldo);
 
                 while(c.moveToNext()){
-
-                    if(!c.getString(8).equals(taskId)){ //At this position the id is saved
+                    if(!c.getString(0).equals(taskId)){ //At this position the id is saved
                         break;
                     }else{
                         LocationDataObject locationDataObject = new LocationDataObject();
-                        locationDataObject.setLocation(Integer.parseInt(c.getString(8)),
-                                Double.parseDouble(c.getString(9)),Double.parseDouble(c.getString(10)));
+                        locationDataObject.setLocation(Integer.parseInt(c.getString(8)),c.getString(9),
+                                Double.parseDouble(c.getString(10)),Double.parseDouble(c.getString(11)));
                         locPerTask.add(locationDataObject);
                     }
                 }
@@ -310,12 +315,11 @@ public class DataSource {
             }while(c.moveToNext());
         }
         c.close();
-        //Log.d(TAG, "TaskList: " + taskList.size());
         return taskList;
 
     }
 
-    public void printHasPlace(){
+    private void printHasPlace(){
         String sql = "SELECT * FROM "+DBHelper.HASPLACE_TABEL_NAME+";";
         Cursor c = this.getReadableDB().rawQuery(sql,null);
         if(c != null){
@@ -333,7 +337,7 @@ public class DataSource {
         }
     }
 
-    public void printJoin(Cursor c){
+    private void printJoin(Cursor c){
         //Cursor c = this.getReadableDB().rawQuery(sql,null);
         if(c != null){
             c.moveToFirst();
