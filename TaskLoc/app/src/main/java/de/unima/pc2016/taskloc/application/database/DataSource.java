@@ -3,6 +3,7 @@ package de.unima.pc2016.taskloc.application.database;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.location.Location;
 import android.util.Log;
 
@@ -47,33 +48,28 @@ public class DataSource {
      * Task-Queries
      */
 
-    public Integer createNewTask(String title, String description, String startDate, String endDate, int range){
-       // Log.d(TAG, "New Task: "+ title+ "  "+ description+ "  "+startDate+"  "+ endDate+" "+ range);
-        String createNewTask = "INSERT INTO "+DBHelper.TASK_TABLE_NAME+" ("+
-                DBHelper.TASK_COLUMN_TASK_ID+", "+
+
+    public int createNewTask(String title, String description, String startDate, String endDate, int range){
+        String createNewTask = "Insert INTO " +DBHelper.TASK_TABLE_NAME+" ("+
+
                 DBHelper.TASK_COLUMN_TITLE+", "+
                 DBHelper.TASK_COLUMN_DESCRIPTION+", "+
                 DBHelper.TASK_COLUMN_START_DATE+", "+
                 DBHelper.TASK_COLUMN_END_DATE+", "+
-                DBHelper.TASK_COLUMN_RANGE+") VALUES ("+
-                "NULL, '"+
-                title+"', '"+
-                description+"', '"+
-                startDate+"', '"+
-                endDate+"', "+
-                range+");";
-        if(this.getWritableDB() != null){
-            this.getWritableDB().execSQL(createNewTask);
-        }
-        Cursor c =  this.getWritableDB().rawQuery("select last_insert_rowid();", null);
-        if(c != null && c.getCount() > 0){
-            c.moveToFirst();
-            Log.d(TAG, "Added new Task to the database");
-            int currID = Integer.parseInt(c.getString(0));
-            c.close();
-            return currID;
-        }
-        return -1;
+
+                DBHelper.TASK_COLUMN_RANGE+") VALUES(?,?,?,?,?)";
+        SQLiteStatement stmt = this.getWritableDB().compileStatement(createNewTask);
+        stmt.bindString(1, ""+title); //Double quto to cater for nulls
+        stmt.bindString(2, ""+description);
+        stmt.bindString(3, ""+startDate);
+        stmt.bindString(4, ""+endDate);
+        stmt.bindLong(5, range);
+        stmt.execute();
+
+        Cursor c = this.getWritableDB().rawQuery("select last_insert_rowid()", null);
+        return Integer.parseInt(c.getString(0));
+
+
     }
     public void createNewTask(String title, String description, Date startTime,Date endTime, int range){
         String createNewTask = "INSERT INTO "+DBHelper.TASK_TABLE_NAME+" ("+
