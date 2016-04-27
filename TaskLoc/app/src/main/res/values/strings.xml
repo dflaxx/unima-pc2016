@@ -1,18 +1,14 @@
 <resources>
     <string name="app_name">TaskLoc</string>
-
     <string name="title_activity_add_new_task">Add New Task</string>
-
     <string name="title_activity_main">MainActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_dummy_launcher">DummyLauncher</string>
-
     <string name="title_activity_test_db">TestDBActivity</string>
     <string name="title_activity_start">TaskLoc</string>
     <string name="title_activity_maps">Map</string>
     <string name="google_app_id">YOUR_PROJECT_NUMBER</string>
     <string name="title_activity_display_task">DisplayTask</string>
-
-
+    <string name="title_activity_select_new_location">Map</string>
 </resources>

@@ -38,6 +38,7 @@ public class DBHelper  extends SQLiteOpenHelper{
 
     public static final String LOCATION_TABLE_NAME = "location";
     public static final String LOCATION_COLUMN_ID = "locationID";
+    public static final String LOCATION_COLUMN_NAME = "locationName";
     public static final String LOCATION_COLUMN_LATITUDE = "latitude";
     public static final String LOCATION_COLUMN_LONGITUDE = "longitude";
 
@@ -74,6 +75,7 @@ public class DBHelper  extends SQLiteOpenHelper{
 
     public static final String SQL_CREATE_LOCATION = "CREATE TABLE " + LOCATION_TABLE_NAME +
             "(" + LOCATION_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            LOCATION_COLUMN_NAME + " TEXT NOT NULL, "+
             LOCATION_COLUMN_LATITUDE + " TEXT NOT NULL, " +
             LOCATION_COLUMN_LONGITUDE + " TEXT NOT NULL);";
 

@@ -8,15 +8,17 @@ import android.location.Location;
 public class LocationDataObject {
     private Location location;
     private int id;
+    private String name;
 
     public LocationDataObject(){
         this.location = new Location("");
         id = -1; //Default value
     }
-    public void setLocation(int id, double latitude, double longitude){
+    public void setLocation(int id, String name, double latitude, double longitude){
         this.location.setLatitude(latitude);
         this.location.setLongitude(longitude);
         this.id = id;
+        this.name = name;
     }
 
     public void setLocation(Location location){
@@ -31,6 +33,9 @@ public class LocationDataObject {
     }
     public Double getLongitude(){
         return location.getLongitude();
+    }
+    public String getName(){
+        return this.name;
     }
     public int getId(){
         return id;

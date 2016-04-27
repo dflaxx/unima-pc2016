@@ -18,10 +18,10 @@ public class CreateTestData {
     private final String Tag = "TaskDataObject";
 
     public CreateTestData(Context context){
-        this.ds = new DataSource(context);
-        this.createTaskData();
-        this.creatLocationData();
-        this.createConnection();
+        this.ds = DataSource.instance(context);
+        //this.createTaskData();
+        //this.creatLocationData();
+        //this.createConnection();
         ds.getAllTaskWithLocation();
 
     }
@@ -54,9 +54,9 @@ public class CreateTestData {
         tmpLoc3.setLatitude(49.473538);
         tmpLoc3.setLongitude(8.474838);
 
-        ds.createLocation(tmpLoc1);
-        ds.createLocation(tmpLoc2);
-        ds.createLocation(tmpLoc3);
+        //ds.createLocation(tmpLoc1);
+        //ds.createLocation(tmpLoc2);
+        //ds.createLocation(tmpLoc3);
         return true;
     }
 
