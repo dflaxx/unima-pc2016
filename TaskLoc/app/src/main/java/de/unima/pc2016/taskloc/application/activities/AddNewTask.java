@@ -63,6 +63,8 @@ public class AddNewTask extends AppCompatActivity {
 
 
     protected void onCreate(Bundle savedInstanceState) {
+        //Todo: add bundle
+        // todo Scrollable
         this.locationList = DataSource.instance(this.getApplicationContext()).getAllLocation();
         this.selectedLocations = new ArrayList<>();
         this.rangeInMeters = 500;

@@ -132,6 +132,7 @@ public class TaskListAdapter extends BaseAdapter {
         @Override
         public void onClick(View arg0) {
             Log.d(TAG, taskList.get(mPosition)+ " was selected");
+            //TODO: Intent mit Werten und Bundle
         }
     }
 
