@@ -168,7 +168,7 @@ public class DataSource {
 
         if(cursor != null && cursor.getCount()>0){
             return this.creatLocationObjects(cursor);
-        }else{
+        } else {
             return new ArrayList<LocationDataObject>(); //return empty list
         }
 

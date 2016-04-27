@@ -246,6 +246,12 @@ public class AddNewTask extends AppCompatActivity {
         setOnclick(this.dateTo);
     }
 
+    @Override
+    protected void onResume() {
+        Log.d("Add.NewTask.onResume()", "Add.NewTask.onResume() called.");
+        super.onResume();
+    }
+
     //Date Listener Method
     private void setOnclick(final EditText txt){
         txt.setOnClickListener(new View.OnClickListener() {
@@ -294,7 +300,11 @@ public class AddNewTask extends AppCompatActivity {
 
     //Add Location Listener
     public class AddLocationListener implements View.OnClickListener{
-        public void onClick(View view){
+        public void onClick(View view) {
+            //Get locations from DB
+            locationList = DataSource.instance(getApplicationContext()).getAllLocation();
+            Log.d("this.locationList","this.locationList: " + locationList);
+
             //Show Dialog
             if(selectedLocations.size() > 0)
                 selectedLocations.clear();
