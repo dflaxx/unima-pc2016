@@ -59,7 +59,7 @@ public class DataSource {
 
                 DBHelper.TASK_COLUMN_RANGE+") VALUES(?,?,?,?,?)";
         SQLiteStatement stmt = this.getWritableDB().compileStatement(createNewTask);
-        stmt.bindString(1, ""+title); //Double quto to cater for nulls
+        stmt.bindString(1, ""+title); //Double quote to cater for nulls
         stmt.bindString(2, ""+description);
         stmt.bindString(3, ""+startDate);
         stmt.bindString(4, ""+endDate);
