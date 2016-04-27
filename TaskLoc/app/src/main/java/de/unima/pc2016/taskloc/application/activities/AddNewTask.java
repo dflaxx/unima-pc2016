@@ -2,9 +2,6 @@ package de.unima.pc2016.taskloc.application.activities;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-
-import android.app.FragmentTransaction;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,20 +20,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
-import android.util.Log;
-
-import de.unima.pc2016.taskloc.R;
-import de.unima.pc2016.taskloc.application.database.CreateTestData;
-import de.unima.pc2016.taskloc.application.database.DataSource;
-import de.unima.pc2016.taskloc.application.database.TaskDataObject;
-
 import java.util.List;
 
 import de.unima.pc2016.taskloc.R;
 import de.unima.pc2016.taskloc.application.database.DataSource;
 import de.unima.pc2016.taskloc.application.database.LocationDataObject;
-
 
 
 public class AddNewTask extends AppCompatActivity {
@@ -65,12 +53,8 @@ public class AddNewTask extends AppCompatActivity {
 
     //SeekBar
     private SeekBar rangeBar = null;
-
-
-
     private int rangeInMeters=0;
     //private int outputRange = rangeBar.getProgress();
-
 
     private ArrayList<LocationDataObject> selectedLocations;
     private List<LocationDataObject> locationList;
@@ -84,7 +68,7 @@ public class AddNewTask extends AppCompatActivity {
         this.rangeInMeters = 500;
         //Intents
         final Intent main = new Intent(AddNewTask.this, StartActivity.class);
-
+        final Intent map = new Intent (AddNewTask.this, MapsOverviewFragment.class);
 
         super.onCreate(savedInstanceState);
         this.context = this.getApplicationContext();
@@ -125,7 +109,7 @@ public class AddNewTask extends AppCompatActivity {
         txtDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 String strTaskDescription = txtDescription.getText().toString();
+                String strTaskDescription = txtDescription.getText().toString();
             }
         });
 
@@ -141,13 +125,7 @@ public class AddNewTask extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        android.support.v4.app.FragmentTransaction mapTransaction =
-                                getSupportFragmentManager().beginTransaction();
-                        mapTransaction.replace(R.id.mapFragmentHolder, new MapsOverviewFragment());
-                        mapTransaction.commit();
-
                         // startActivity(map);
-
 
                     }
                 });
@@ -218,24 +196,8 @@ public class AddNewTask extends AppCompatActivity {
                 if(txtDescription.getText().equals("")){
                     return;
                 }
-
-                else{
-
-//                    Log.d("AddNewTask", "insert into DB");
-
-                    DataSource.instance(AddNewTask.this).createNewTask(txtInsertTitle.getText().toString(),
-                            txtDescription.getText().toString(), dateFrom.getText().toString(),
-                        dateTo.getText().toString(), rangeBar.getProgress());
-
-
-
-
-
-                    startActivity(main);
-
                 if(dateFrom.getText().equals("")){
                     return;
-
                 }
                 if(dateTo.getText().equals("")){
                     return;

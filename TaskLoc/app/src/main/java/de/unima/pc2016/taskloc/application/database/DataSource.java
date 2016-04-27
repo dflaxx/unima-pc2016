@@ -49,7 +49,7 @@ public class DataSource {
      */
 
 
-    public void createNewTask(String title, String description, String startDate, String endDate, int range){
+    public int createNewTask(String title, String description, String startDate, String endDate, int range){
         String createNewTask = "Insert INTO " +DBHelper.TASK_TABLE_NAME+" ("+
 
                 DBHelper.TASK_COLUMN_TITLE+", "+
@@ -65,6 +65,9 @@ public class DataSource {
         stmt.bindString(4, ""+endDate);
         stmt.bindLong(5, range);
         stmt.execute();
+
+        Cursor c = this.getWritableDB().rawQuery("select last_insert_rowid()", null);
+        return Integer.parseInt(c.getString(0));
 
 
     }
