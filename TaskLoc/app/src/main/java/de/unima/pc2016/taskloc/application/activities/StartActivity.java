@@ -140,7 +140,7 @@ public class StartActivity extends AppCompatActivity {
         }
     }
 
-
+/*
     public void createNotification(String task) {
     //Placed here for demo usage
         String title = "TaskLoc";
@@ -174,7 +174,7 @@ public class StartActivity extends AppCompatActivity {
         mNotificationManager.notify((int) System.currentTimeMillis(), mBuilder.build());
 
     }
-
+*/
 
 
 
