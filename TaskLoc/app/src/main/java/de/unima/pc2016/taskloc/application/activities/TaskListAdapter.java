@@ -1,5 +1,6 @@
 package de.unima.pc2016.taskloc.application.activities;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.provider.ContactsContract;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import de.unima.pc2016.taskloc.R;
 import de.unima.pc2016.taskloc.application.Geofences.GeofenceController;
+import de.unima.pc2016.taskloc.application.Geofences.GeofenceTransitionsIntentService;
 import de.unima.pc2016.taskloc.application.database.DataSource;
 import de.unima.pc2016.taskloc.application.database.TaskDataObject;
 
@@ -163,6 +165,12 @@ public class TaskListAdapter extends BaseAdapter {
                     GeofenceController.getInstance(context).removeTaskFromGeofenceList(id);
                 }
             };
+
+            if(GeofenceTransitionsIntentService.notificationContext != null){
+                NotificationManager notificationManager = (NotificationManager) context.getSystemService(GeofenceTransitionsIntentService.notificationContext.NOTIFICATION_SERVICE);
+                notificationManager.cancel(id);
+            }
+
 
 
         }

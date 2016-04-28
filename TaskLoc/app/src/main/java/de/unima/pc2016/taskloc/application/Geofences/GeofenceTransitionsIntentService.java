@@ -26,6 +26,7 @@ import de.unima.pc2016.taskloc.application.database.TaskDataObject;
 public class GeofenceTransitionsIntentService extends IntentService{
 
     private final String TAG ="GTIntentService";
+    public static Context notificationContext;
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *
@@ -41,7 +42,7 @@ public class GeofenceTransitionsIntentService extends IntentService{
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
+        notificationContext = this.getApplicationContext();
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
 
 
