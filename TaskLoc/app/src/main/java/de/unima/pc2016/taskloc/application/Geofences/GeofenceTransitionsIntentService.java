@@ -9,9 +9,16 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingEvent;
+
+import java.util.List;
+
 import de.unima.pc2016.taskloc.R;
 import de.unima.pc2016.taskloc.application.activities.DisplayTask;
 import de.unima.pc2016.taskloc.application.activities.StartActivity;
+import de.unima.pc2016.taskloc.application.database.DataSource;
+import de.unima.pc2016.taskloc.application.database.TaskDataObject;
 
 /**
  * Created by sven on 22.04.16.
@@ -34,25 +41,60 @@ public class GeofenceTransitionsIntentService extends IntentService{
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        int i= 5;
-        Log.d(TAG, "onHandlIntent called");
 
-        //ToDo: Start Notification
+        GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
 
-        createNotification("TestTask1");
+
+        if (geofencingEvent.hasError()) {
+            return;
+        }
+
+        // Get the transition type.
+        int geofenceTransition = geofencingEvent.getGeofenceTransition();
+
+        // Test that the reported transition was of interest.
+        if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER){
+
+            // Get the geofences that were triggered. A single event can trigger
+            // multiple geofences.
+            List triggeringGeofences = geofencingEvent.getTriggeringGeofences();
+            List<Geofence> triggerList = geofencingEvent.getTriggeringGeofences();
+            // Get the transition details as a String.
+
+            //String geofenceTransitionDetails = getGeofenceTransitionDetails(this, geofenceTransition, triggeringGeofences);
+            for(int i=0; i<triggerList.size(); i++){
+
+              //  Log.d(TAG, " GeofenceEvent Information: " + triggeringGeofences.get(i).toString());
+              //  Log.d(TAG," GeofenceEvent Information: "+ triggerList.get(0).getRequestId());
+                createNotification(Integer.parseInt(triggerList.get(0).getRequestId()));
+            }
+            // Send notification and log the transition details.
+
+        } else {
+            // Log the error.
+
+        }
+
+
+
+
+
+
     }
 
-    public void createNotification(String task) {
+    public void createNotification(int taskID) {
         //Placed here for demo usage
-        String title = "TaskLoc";
+        String title = String.valueOf(R.string.notification_title);
+
+        List<TaskDataObject> taskList = DataSource.instance(this.getApplicationContext()).getTaskByID(taskID);
+        Log.d(TAG, " Größe der TaskList: " +taskList.size()+ " "+ taskID);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_taskloc_launcher) //Icon shown in notification bar
-                        .setContentTitle(title) // Notification title
-                        .setContentText(task); // Message shown in notification bar
+                        .setContentTitle("TaskLoc") // Notification title
+                        .setContentText("TEST TEXT"); // Message shown in notification bar
 // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(this, DisplayTask.class);
-
 // The stack builder object will contain an artificial back stack for the
 // started Activity.
 // This ensures that navigating backward from the Activity leads out of
@@ -63,16 +105,13 @@ public class GeofenceTransitionsIntentService extends IntentService{
 // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(resultPendingIntent);
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 // mId allows you to update the notification later on.
         // (int) System.currentTimeMillis() used to create unique ID
-        mNotificationManager.notify((int) System.currentTimeMillis(), mBuilder.build());
+        mNotificationManager.notify(taskID, mBuilder.build());
 
     }
 

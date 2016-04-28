@@ -52,6 +52,7 @@ public class TaskListAdapter extends BaseAdapter {
                 taskList.add(tmp);
             }
         }
+        GeofenceController.getInstance(context).addGeofencesToList(taskList);
         notifyDataSetChanged();
     }
 

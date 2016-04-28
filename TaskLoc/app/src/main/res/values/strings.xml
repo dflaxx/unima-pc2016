@@ -11,4 +11,5 @@
     <string name="google_app_id">YOUR_PROJECT_NUMBER</string>
     <string name="title_activity_display_task">DisplayTask</string>
     <string name="title_activity_select_new_location">Map</string>
+    <string name="notification_title">TaskLoc</string>
 </resources>

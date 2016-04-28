@@ -57,15 +57,7 @@ public class TaskOverviewFragment extends Fragment{
     @Override
     public void onStart(){
         super.onStart();
-        List<TaskDataObject> list =  DataSource.instance(context).getAllTask();
-        if(list == null)
-            return; //No elements saved
-        int currTaskAmount = list.size();
 
-        if(currTaskAmount == taskListAdapter.getCount()){
-            return; //No change
-        }
-        taskListAdapter.updateList(list);
     }
 
 
@@ -75,15 +67,12 @@ public class TaskOverviewFragment extends Fragment{
         super.onResume();
         List<TaskDataObject> list =  DataSource.instance(context).getAllTask();
 
-        if(list == null)
-            return; //No elements saved
-        int currTaskAmount = list.size();
-
-        if(currTaskAmount == taskListAdapter.getCount()){
-            return; //No change
+        if(list != null && taskListAdapter != null){
+            int currTaskAmount = list.size();
+            if(currTaskAmount != taskListAdapter.getCount()){
+                taskListAdapter.updateList(list);
+             }
         }
-        taskListAdapter.updateList(list);
-
     }
 
     @Override
