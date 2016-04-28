@@ -86,11 +86,13 @@ public class TaskDataObject {
         return endDate;
     }
 
+    // TODO: This method does not do what it seems to do! -> Implement String parsing to date.
     public void setStartDate(String startDate) {
         Calendar cal = Calendar.getInstance();
         this.startDate = cal.getTime();
     }
 
+    // TODO: This method does not do what it seems to do! -> Implement String parsing to date.
     public void setEndDate(String endDate) {
         Calendar cal = Calendar.getInstance();
         //cal.setTime(sdf.parse(endDate));
@@ -102,6 +104,11 @@ public class TaskDataObject {
     }
 
     public String toString(){
-        return this.getTitle();
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.getTitle());
+        sb.append(" (");
+        sb.append("#" + this.getId());
+        sb.append(")");
+        return sb.toString();
     }
 }

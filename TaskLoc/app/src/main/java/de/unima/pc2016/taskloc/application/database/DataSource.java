@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteStatement;
 import android.location.Location;
 import android.util.Log;
 
-import com.google.android.gms.gcm.Task;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -98,10 +96,16 @@ public class DataSource {
         Log.d(TAG, "Task was deleted");
     }
 
-    public List<TaskDataObject> getTaskByID(int id){
+    public TaskDataObject getTaskByID(int id){
         String selectTask = "Select * from "+ DBHelper.TASK_TABLE_NAME+" WHERE"+
                 DBHelper.TASK_COLUMN_TASK_ID+"="+id+";";
-        return new ArrayList<TaskDataObject>();
+        Cursor c = this.getReadableDB().rawQuery(selectTask, null);
+
+        if (c != null && c.getCount() == 1) {
+            return this.createTaskObject(c).get(0);
+        } else {
+            return null;
+        }
     }
 
     public List<TaskDataObject> getAllTask(){
@@ -110,7 +114,7 @@ public class DataSource {
         List<TaskDataObject> currentTaskList = null;
         Cursor cursor = this.getReadableDB().rawQuery(selectAll, null);
         if(cursor != null && cursor.getCount() > 0){
-            currentTaskList = this.createTaskOjbect(cursor);
+            currentTaskList = this.createTaskObject(cursor);
             return currentTaskList;
         }
         cursor.close();
@@ -228,7 +232,7 @@ public class DataSource {
     /*
     Create Task Objects
      */
-    private List<TaskDataObject> createTaskOjbect(Cursor c){
+    private List<TaskDataObject> createTaskObject(Cursor c){
         List<TaskDataObject> taskList = new ArrayList<TaskDataObject>();
         //Log.d(TAG, "Start creating Task Objects");
         if(c!=null){
