@@ -189,23 +189,6 @@ public class AddNewTask extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //TODO insert Task export and move to main view
-                if(txtInsertTitle.getText().equals("")){
-                    Toast.makeText(v.getContext(), MSG_NO_INPUT, Toast.LENGTH_LONG).show();
-                    return;
-                }
-                if(txtDescription.getText().equals("")){
-                    return;
-                }
-                if(dateFrom.getText().equals("")){
-                    return;
-                }
-                if(dateTo.getText().equals("")){
-                    return;
-                }
-                if(txtRange.getText().equals("")){
-                    return;
-                }
-                String s = "s";
                 Thread tcreateTask = new Thread(){
 
                     @Override
@@ -219,16 +202,20 @@ public class AddNewTask extends AppCompatActivity {
                         if(currTaskId != -1){
                             Log.d("Add newTask", "Current Task ID: "+ currTaskId);
                             DataSource.instance(context).connectLocationWithPlace(currTaskId, selectedLocations);
-
                         }
                     }
                 };
-
-                tcreateTask.start();
-
-
-
-
+                int currTaskId = DataSource.instance(context).createNewTask(
+                        txtInsertTitle.getText().toString(),
+                        txtDescription.getText().toString(),
+                        dateFrom.getText().toString(),
+                        dateTo.getText().toString(),
+                        rangeInMeters);
+                if(currTaskId != -1){
+                    Log.d("Add newTask", "Current Task ID: "+ currTaskId);
+                    DataSource.instance(context).connectLocationWithPlace(currTaskId, selectedLocations);
+                }
+                //tcreateTask.start();
                 startActivity(main);
 
             }

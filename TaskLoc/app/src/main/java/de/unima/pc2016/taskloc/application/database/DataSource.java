@@ -54,18 +54,31 @@ public class DataSource {
                 DBHelper.TASK_COLUMN_DESCRIPTION+", "+
                 DBHelper.TASK_COLUMN_START_DATE+", "+
                 DBHelper.TASK_COLUMN_END_DATE+", "+
-
                 DBHelper.TASK_COLUMN_RANGE+") VALUES(?,?,?,?,?)";
+
         SQLiteStatement stmt = this.getWritableDB().compileStatement(createNewTask);
         stmt.bindString(1, ""+title); //Double quto to cater for nulls
         stmt.bindString(2, ""+description);
         stmt.bindString(3, ""+startDate);
-        stmt.bindString(4, ""+endDate);
+        stmt.bindString(4, "" + endDate);
         stmt.bindLong(5, range);
         stmt.execute();
 
-        Cursor c = this.getWritableDB().rawQuery("select last_insert_rowid()", null);
-        return Integer.parseInt(c.getString(0));
+        Cursor c = this.getReadableDB().rawQuery("SELECT last_insert_rowid()",null);
+        c.moveToFirst();
+        Log.d(TAG, "Cursorcount: "+ c.getCount() );
+        if(c!= null){
+            int tmp = Integer.parseInt(c.getString(0));
+            return tmp;
+        }
+        /*if(c != null){
+            int tmp = Integer.parseInt(c.getString(0));
+            c.close();
+            return tmp;
+        }
+        c.close();*/
+
+        return -1;
 
 
     }
