@@ -87,13 +87,13 @@ public class GeofenceTransitionsIntentService extends IntentService{
         //Placed here for demo usage
         String title = String.valueOf(R.string.notification_title);
 
-        List<TaskDataObject> taskList = DataSource.instance(this.getApplicationContext()).getTaskByID(taskID);
-        Log.d(TAG, " Größe der TaskList: " +taskList.size()+ " "+ taskID);
+        TaskDataObject taskList = DataSource.instance(this.getApplicationContext()).getTaskByID(taskID);
+
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_taskloc_launcher) //Icon shown in notification bar
                         .setContentTitle("TaskLoc") // Notification title
-                        .setContentText("TEST TEXT"); // Message shown in notification bar
+                        .setContentText("Task: "+ taskList.getTitle()); // Message shown in notification bar
 // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(this, DisplayTask.class);
 // The stack builder object will contain an artificial back stack for the

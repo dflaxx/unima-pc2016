@@ -110,7 +110,7 @@ public class DataSource {
     }
 
     public TaskDataObject getTaskByID(int id){
-        String selectTask = "Select * from "+ DBHelper.TASK_TABLE_NAME+" WHERE"+
+        String selectTask = "Select * from "+ DBHelper.TASK_TABLE_NAME+" WHERE "+
                 DBHelper.TASK_COLUMN_TASK_ID+"="+id+";";
         Cursor c = this.getReadableDB().rawQuery(selectTask, null);
 
