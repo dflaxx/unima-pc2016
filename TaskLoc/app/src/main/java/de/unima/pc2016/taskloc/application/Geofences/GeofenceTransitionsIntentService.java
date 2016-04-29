@@ -45,7 +45,6 @@ public class GeofenceTransitionsIntentService extends IntentService{
         notificationContext = this.getApplicationContext();
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
 
-
         if (geofencingEvent.hasError()) {
             return;
         }
@@ -61,15 +60,12 @@ public class GeofenceTransitionsIntentService extends IntentService{
             List triggeringGeofences = geofencingEvent.getTriggeringGeofences();
             List<Geofence> triggerList = geofencingEvent.getTriggeringGeofences();
             // Get the transition details as a String.
-
+            Log.d(TAG, "GeofencList Trigger "+ triggeringGeofences.size()+ " "+ triggerList.size());
             //String geofenceTransitionDetails = getGeofenceTransitionDetails(this, geofenceTransition, triggeringGeofences);
             for(int i=0; i<triggerList.size(); i++){
-
-              //  Log.d(TAG, " GeofenceEvent Information: " + triggeringGeofences.get(i).toString());
-              //  Log.d(TAG," GeofenceEvent Information: "+ triggerList.get(0).getRequestId());
-                createNotification(Integer.parseInt(triggerList.get(0).getRequestId()));
+                createNotification(Integer.parseInt(triggerList.get(i).getRequestId()));
             }
-            // Send notification and log the transition details.
+
 
         } else {
             // Log the error.
@@ -89,11 +85,15 @@ public class GeofenceTransitionsIntentService extends IntentService{
 
         TaskDataObject taskList = DataSource.instance(this.getApplicationContext()).getTaskByID(taskID);
 
+        if(taskList == null){
+            return;
+        }
+        Log.d(TAG, "Notification of following task "+ taskList.getTitle());
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_taskloc_launcher) //Icon shown in notification bar
                         .setContentTitle("TaskLoc") // Notification title
-git st                        .setContentText("Task: "+ taskList.getTitle()); // Message shown in notification bar
+                        .setContentText("Task: "+ taskList.getTitle()); // Message shown in notification bar
 // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(this, DisplayTask.class);
 // The stack builder object will contain an artificial back stack for the

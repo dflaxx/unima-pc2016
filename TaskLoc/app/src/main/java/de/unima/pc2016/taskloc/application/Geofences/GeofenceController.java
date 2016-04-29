@@ -75,8 +75,11 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks, 
             Log.d(TAG, "Permission is missing or GoogleApiClient is not connected yet");
             return;
         }
-        if(getGeofencingRequest() != null)
+        if(getGeofencingRequest() != null){
             LocationServices.GeofencingApi.addGeofences(mGoogleApiClient, getGeofencingRequest(), getGeofencePendingIntent());
+            Log.d(TAG,"Google API Request List Size: "+ getGeofencingRequest().getGeofences().size());
+        }
+
     }
 
     public void stopGeofencing(){
