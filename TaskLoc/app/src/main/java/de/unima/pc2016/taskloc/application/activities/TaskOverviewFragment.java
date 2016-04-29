@@ -109,22 +109,27 @@ public class TaskOverviewFragment extends Fragment {
             Location currLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             //ToDo: Get Distance to location
 
-            for(TaskDataObject currObj : currentTaskList){
+            if (currentTaskList != null) {
+
+                for(TaskDataObject currObj : currentTaskList){
                 /*double dist = 6378.388 * Math.acos(
                         Math.sin(currObj.getLocations().get(0).getLatitude())*
                         Math.sin(currLocation.getLatitude() +
                         Math.cos(currObj.getLocations().get(0).getLatitude()))*
                         Math.cos(currLocation.getLatitude() *
                         Math.cos(currLocation.getLongitude() - currObj.getLocations().get(0).getLongitude())) );*/
+                }
+
+                //ToDo: Sort Values after Current Position
+                /*
+                dist = 6378.388 * acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2 - lon1))
+                https://www.kompf.de/gps/distcalc.html
+                 */
+
+                return currentTaskList;
             }
 
-            //ToDo: Sort Values after Current Position
-            /*
-            dist = 6378.388 * acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2 - lon1))
-            https://www.kompf.de/gps/distcalc.html
-             */
-
-            return currentTaskList;
+            return null;
         }
 
         @Override
