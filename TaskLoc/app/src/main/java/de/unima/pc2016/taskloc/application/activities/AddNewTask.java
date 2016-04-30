@@ -191,23 +191,6 @@ public class AddNewTask extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //TODO insert Task export and move to main view
-                if(txtInsertTitle.getText().equals("")){
-                    Toast.makeText(v.getContext(), MSG_NO_INPUT, Toast.LENGTH_LONG).show();
-                    return;
-                }
-                if(txtDescription.getText().equals("")){
-                    return;
-                }
-                if(dateFrom.getText().equals("")){
-                    return;
-                }
-                if(dateTo.getText().equals("")){
-                    return;
-                }
-                if(txtRange.getText().equals("")){
-                    return;
-                }
-                String s = "s";
                 Thread tcreateTask = new Thread(){
 
                     @Override
@@ -221,16 +204,20 @@ public class AddNewTask extends AppCompatActivity {
                         if(currTaskId != -1){
                             Log.d("Add newTask", "Current Task ID: "+ currTaskId);
                             DataSource.instance(context).connectLocationWithPlace(currTaskId, selectedLocations);
-
                         }
                     }
                 };
-
-                tcreateTask.start();
-
-
-
-
+                int currTaskId = DataSource.instance(context).createNewTask(
+                        txtInsertTitle.getText().toString(),
+                        txtDescription.getText().toString(),
+                        dateFrom.getText().toString(),
+                        dateTo.getText().toString(),
+                        rangeInMeters);
+                if(currTaskId != -1){
+                    Log.d("Add newTask", "Current Task ID: "+ currTaskId);
+                    DataSource.instance(context).connectLocationWithPlace(currTaskId, selectedLocations);
+                }
+                //tcreateTask.start();
                 startActivity(main);
 
             }
@@ -246,6 +233,12 @@ public class AddNewTask extends AppCompatActivity {
 
         setOnclick(this.dateFrom);
         setOnclick(this.dateTo);
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d("Add.NewTask.onResume()", "Add.NewTask.onResume() called.");
+        super.onResume();
     }
 
     //Date Listener Method
@@ -296,7 +289,11 @@ public class AddNewTask extends AppCompatActivity {
 
     //Add Location Listener
     public class AddLocationListener implements View.OnClickListener{
-        public void onClick(View view){
+        public void onClick(View view) {
+            //Get locations from DB
+            locationList = DataSource.instance(getApplicationContext()).getAllLocation();
+            Log.d("this.locationList","this.locationList: " + locationList);
+
             //Show Dialog
             if(selectedLocations.size() > 0)
                 selectedLocations.clear();

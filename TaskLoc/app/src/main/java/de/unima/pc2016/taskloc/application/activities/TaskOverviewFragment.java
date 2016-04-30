@@ -1,9 +1,14 @@
 package de.unima.pc2016.taskloc.application.activities;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +21,7 @@ import android.widget.ListView;
 import com.google.android.gms.gcm.Task;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import de.unima.pc2016.taskloc.R;
@@ -26,19 +32,19 @@ import de.unima.pc2016.taskloc.application.database.TaskDataObject;
 /**
  * Created by sven on 15.04.16.
  */
-public class TaskOverviewFragment extends Fragment{
-    private final String TAG="TaskOverviewFragment";
-   // protected ArrayAdapter<TaskDataObject> taskListAdapter;
+public class TaskOverviewFragment extends Fragment {
+    private final String TAG = "TaskOverviewFragment";
+    // protected ArrayAdapter<TaskDataObject> taskListAdapter;
     protected List<TaskDataObject> list;
     protected TaskListAdapter taskListAdapter;
     private Context context;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_task, container, false);
 
         context = rootView.getContext();
-
 
 
         list = new ArrayList<TaskDataObject>();
@@ -55,35 +61,23 @@ public class TaskOverviewFragment extends Fragment{
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
-        List<TaskDataObject> list =  DataSource.instance(context).getAllTask();
-        if(list == null)
-            return; //No elements saved
-        int currTaskAmount = list.size();
 
-        if(currTaskAmount == taskListAdapter.getCount()){
-            return; //No change
-        }
-        taskListAdapter.updateList(list);
     }
 
 
-
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        List<TaskDataObject> list =  DataSource.instance(context).getAllTask();
+        List<TaskDataObject> list = DataSource.instance(context).getAllTask();
 
-        if(list == null)
-            return; //No elements saved
-        int currTaskAmount = list.size();
-
-        if(currTaskAmount == taskListAdapter.getCount()){
-            return; //No change
+        if (list != null && taskListAdapter != null) {
+            int currTaskAmount = list.size();
+            if (currTaskAmount != taskListAdapter.getCount()) {
+                taskListAdapter.updateList(list);
+            }
         }
-        taskListAdapter.updateList(list);
-
     }
 
     @Override
@@ -105,8 +99,37 @@ public class TaskOverviewFragment extends Fragment{
 
         @Override
         protected List<TaskDataObject> doInBackground(Integer... integers) {
-            List<TaskDataObject> currentTaskList =  DataSource.instance(context).getAllTask();
-            return currentTaskList;
+            List<TaskDataObject> currentTaskList = DataSource.instance(context).getAllTask();
+            HashMap<String, Double> distanceToCurrentPosition = new HashMap<>();
+            LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, " Task werden nicht geladen, da Location nicht Activiert");
+                return null;
+            }
+            Location currLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            //ToDo: Get Distance to location
+
+            if (currentTaskList != null) {
+
+                for(TaskDataObject currObj : currentTaskList){
+                /*double dist = 6378.388 * Math.acos(
+                        Math.sin(currObj.getLocations().get(0).getLatitude())*
+                        Math.sin(currLocation.getLatitude() +
+                        Math.cos(currObj.getLocations().get(0).getLatitude()))*
+                        Math.cos(currLocation.getLatitude() *
+                        Math.cos(currLocation.getLongitude() - currObj.getLocations().get(0).getLongitude())) );*/
+                }
+
+                //ToDo: Sort Values after Current Position
+                /*
+                dist = 6378.388 * acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2 - lon1))
+                https://www.kompf.de/gps/distcalc.html
+                 */
+
+                return currentTaskList;
+            }
+
+            return null;
         }
 
         @Override

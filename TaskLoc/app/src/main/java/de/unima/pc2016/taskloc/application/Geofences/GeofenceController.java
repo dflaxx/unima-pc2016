@@ -75,8 +75,11 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks, 
             Log.d(TAG, "Permission is missing or GoogleApiClient is not connected yet");
             return;
         }
+        if(getGeofencingRequest() != null){
+            LocationServices.GeofencingApi.addGeofences(mGoogleApiClient, getGeofencingRequest(), getGeofencePendingIntent());
+            Log.d(TAG,"Google API Request List Size: "+ getGeofencingRequest().getGeofences().size());
+        }
 
-        LocationServices.GeofencingApi.addGeofences(mGoogleApiClient, getGeofencingRequest(), getGeofencePendingIntent());
     }
 
     public void stopGeofencing(){
@@ -119,12 +122,12 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks, 
         }
     }
 
-    public void addTask(TaskDataObject tdo){
-        this.addTaskToGeofenceList(tdo);
-        this.startGeofencing();
-    }
 
     public void addGeofencesToList(List<TaskDataObject> taskDataObjectList){
+        if(mGeofenceList.size() > 0)
+            mGeofenceList.clear();
+        if(taskDataObjectList == null)
+            return;
         for(TaskDataObject tdo : taskDataObjectList){
             this.addTaskToGeofenceList(tdo);
         }
@@ -146,6 +149,7 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks, 
         builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
         builder.addGeofences(mGeofenceList);
         return builder.build();
+
     }
 
 

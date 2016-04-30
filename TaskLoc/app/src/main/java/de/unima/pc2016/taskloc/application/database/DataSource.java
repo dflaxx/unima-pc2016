@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteStatement;
 import android.location.Location;
 import android.util.Log;
 
-import com.google.android.gms.gcm.Task;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -56,18 +54,31 @@ public class DataSource {
                 DBHelper.TASK_COLUMN_DESCRIPTION+", "+
                 DBHelper.TASK_COLUMN_START_DATE+", "+
                 DBHelper.TASK_COLUMN_END_DATE+", "+
-
                 DBHelper.TASK_COLUMN_RANGE+") VALUES(?,?,?,?,?)";
+
         SQLiteStatement stmt = this.getWritableDB().compileStatement(createNewTask);
         stmt.bindString(1, ""+title); //Double quote to cater for nulls
         stmt.bindString(2, ""+description);
         stmt.bindString(3, ""+startDate);
-        stmt.bindString(4, ""+endDate);
+        stmt.bindString(4, "" + endDate);
         stmt.bindLong(5, range);
         stmt.execute();
 
-        Cursor c = this.getWritableDB().rawQuery("select last_insert_rowid()", null);
-        return Integer.parseInt(c.getString(0));
+        Cursor c = this.getReadableDB().rawQuery("SELECT last_insert_rowid()",null);
+        c.moveToFirst();
+        Log.d(TAG, "Cursorcount: "+ c.getCount() );
+        if(c!= null){
+            int tmp = Integer.parseInt(c.getString(0));
+            return tmp;
+        }
+        /*if(c != null){
+            int tmp = Integer.parseInt(c.getString(0));
+            c.close();
+            return tmp;
+        }
+        c.close();*/
+
+        return -1;
 
 
     }
@@ -98,10 +109,16 @@ public class DataSource {
         Log.d(TAG, "Task was deleted");
     }
 
-    public List<TaskDataObject> getTaskByID(int id){
-        String selectTask = "Select * from "+ DBHelper.TASK_TABLE_NAME+" WHERE"+
+    public TaskDataObject getTaskByID(int id){
+        String selectTask = "Select * from "+ DBHelper.TASK_TABLE_NAME+" WHERE "+
                 DBHelper.TASK_COLUMN_TASK_ID+"="+id+";";
-        return new ArrayList<TaskDataObject>();
+        Cursor c = this.getReadableDB().rawQuery(selectTask, null);
+
+        if (c != null && c.getCount() == 1) {
+            return this.createTaskObject(c).get(0);
+        } else {
+            return null;
+        }
     }
 
     public List<TaskDataObject> getAllTask(){
@@ -110,7 +127,7 @@ public class DataSource {
         List<TaskDataObject> currentTaskList = null;
         Cursor cursor = this.getReadableDB().rawQuery(selectAll, null);
         if(cursor != null && cursor.getCount() > 0){
-            currentTaskList = this.createTaskOjbect(cursor);
+            currentTaskList = this.createTaskObject(cursor);
             return currentTaskList;
         }
         cursor.close();
@@ -164,7 +181,7 @@ public class DataSource {
 
         if(cursor != null && cursor.getCount()>0){
             return this.creatLocationObjects(cursor);
-        }else{
+        } else {
             return new ArrayList<LocationDataObject>(); //return empty list
         }
 
@@ -228,7 +245,7 @@ public class DataSource {
     /*
     Create Task Objects
      */
-    private List<TaskDataObject> createTaskOjbect(Cursor c){
+    private List<TaskDataObject> createTaskObject(Cursor c){
         List<TaskDataObject> taskList = new ArrayList<TaskDataObject>();
         //Log.d(TAG, "Start creating Task Objects");
         if(c!=null){
