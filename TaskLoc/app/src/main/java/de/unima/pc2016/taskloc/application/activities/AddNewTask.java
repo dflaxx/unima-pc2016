@@ -64,7 +64,7 @@ public class AddNewTask extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         //Todo: add bundle
-        // todo Scrollable
+
         this.locationList = DataSource.instance(this.getApplicationContext()).getAllLocation();
         this.selectedLocations = new ArrayList<>();
         this.rangeInMeters = 500;
@@ -190,7 +190,7 @@ public class AddNewTask extends AppCompatActivity {
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO insert Task export and move to main view
+
                 Thread tcreateTask = new Thread(){
 
                     @Override
