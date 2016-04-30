@@ -16,6 +16,8 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.security.KeyStore;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,6 +27,7 @@ import java.util.List;
 import de.unima.pc2016.taskloc.R;
 import de.unima.pc2016.taskloc.application.database.DataSource;
 import de.unima.pc2016.taskloc.application.database.LocationDataObject;
+import de.unima.pc2016.taskloc.application.database.TaskDataObject;
 
 
 public class AddNewTask extends AppCompatActivity {
@@ -60,17 +63,28 @@ public class AddNewTask extends AppCompatActivity {
     private List<LocationDataObject> locationList;
     private Context context;
 
+    private boolean editMode = false;
 
 
-    protected void onCreate(Bundle savedInstanceState) {
+
+    protected void onCreate(final Bundle savedInstanceState) {
         //Todo: add bundle
+        int taskID = 0;
+        if (savedInstanceState != null){
+            editMode = true;
+            taskID = savedInstanceState.getInt("TaskDbID");
+            Log.d("AddNewTask OnCreate", "Handed TaskID " + taskID);
+
+        }
+
+
 
         this.locationList = DataSource.instance(this.getApplicationContext()).getAllLocation();
         this.selectedLocations = new ArrayList<>();
         this.rangeInMeters = 500;
         //Intents
         final Intent main = new Intent(AddNewTask.this, StartActivity.class);
-        final Intent map = new Intent (AddNewTask.this, MapsOverviewFragment.class);
+
 
         super.onCreate(savedInstanceState);
         this.context = this.getApplicationContext();
@@ -188,37 +202,57 @@ public class AddNewTask extends AppCompatActivity {
 
         //ListenerSave
         buttonSave.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
+                if( editMode = false) {
 
-                Thread tcreateTask = new Thread(){
+                    Thread tcreateTask = new Thread() {
 
-                    @Override
-                    public void run(){
-                        int currTaskId = DataSource.instance(context).createNewTask(
-                                txtInsertTitle.getText().toString(),
-                                txtDescription.getText().toString(),
-                                dateFrom.getText().toString(),
-                                dateTo.getText().toString(),
-                                rangeInMeters);
-                        if(currTaskId != -1){
-                            Log.d("Add newTask", "Current Task ID: "+ currTaskId);
-                            DataSource.instance(context).connectLocationWithPlace(currTaskId, selectedLocations);
+                        @Override
+                        public void run() {
+                            int currTaskId = DataSource.instance(context).createNewTask(
+                                    txtInsertTitle.getText().toString(),
+                                    txtDescription.getText().toString(),
+                                    dateFrom.getText().toString(),
+                                    dateTo.getText().toString(),
+                                    rangeInMeters);
+                            if (currTaskId != -1) {
+                                Log.d("Add newTask", "Current Task ID: " + currTaskId);
+                                DataSource.instance(context).connectLocationWithPlace(currTaskId, selectedLocations);
+                            }
                         }
+                    };
+                    int currTaskId = DataSource.instance(context).createNewTask(
+                            txtInsertTitle.getText().toString(),
+                            txtDescription.getText().toString(),
+                            dateFrom.getText().toString(),
+                            dateTo.getText().toString(),
+                            rangeInMeters);
+                    if (currTaskId != -1) {
+                        Log.d("Add newTask", "Current Task ID: " + currTaskId);
+                        DataSource.instance(context).connectLocationWithPlace(currTaskId, selectedLocations);
                     }
-                };
-                int currTaskId = DataSource.instance(context).createNewTask(
-                        txtInsertTitle.getText().toString(),
-                        txtDescription.getText().toString(),
-                        dateFrom.getText().toString(),
-                        dateTo.getText().toString(),
-                        rangeInMeters);
-                if(currTaskId != -1){
-                    Log.d("Add newTask", "Current Task ID: "+ currTaskId);
-                    DataSource.instance(context).connectLocationWithPlace(currTaskId, selectedLocations);
+                    //tcreateTask.start();
+                    startActivity(main);
+                }else{
+                    int currTaskId = DataSource.instance(context).createNewTask(
+                            txtInsertTitle.getText().toString(),
+                            txtDescription.getText().toString(),
+                            dateFrom.getText().toString(),
+                            dateTo.getText().toString(),
+                            rangeInMeters);
+                    if (currTaskId != -1){
+                        Log.d("Add newTask", "Current Task ID: " + currTaskId);
+                        DataSource.instance(context).connectLocationWithPlace(currTaskId, selectedLocations);
+                    }
+                    DataSource.instance(context).deleteTask(savedInstanceState.getInt("TaskDbID"));
+                    startActivity(main);
+
+
+
+
                 }
-                //tcreateTask.start();
-                startActivity(main);
 
             }
         });
@@ -233,6 +267,19 @@ public class AddNewTask extends AppCompatActivity {
 
         setOnclick(this.dateFrom);
         setOnclick(this.dateTo);
+
+        if(editMode){
+            TaskDataObject tdo = DataSource.instance(this).getTaskByID(taskID);
+            if(tdo != null){
+                txtInsertTitle.setText(tdo.getTitle());
+                txtDescription.setText(tdo.getDescription());
+                locationList = tdo.getLocations();
+                dateFrom.setText(tdo.getStartDate().toString());
+                dateTo.setText(tdo.getEndDate().toString());
+                rangeBar.setProgress(tdo.getRange());
+            }
+
+        }
     }
 
     @Override

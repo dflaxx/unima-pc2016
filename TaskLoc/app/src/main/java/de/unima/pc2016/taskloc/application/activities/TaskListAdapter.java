@@ -2,7 +2,9 @@ package de.unima.pc2016.taskloc.application.activities;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -136,6 +138,11 @@ public class TaskListAdapter extends BaseAdapter {
         public void onClick(View arg0) {
             Log.d(TAG, taskList.get(mPosition)+ " was selected");
             //TODO: Intent mit Werten und Bundle
+            Intent editTaskIntent = new Intent (context, AddNewTask.class);
+            Bundle taskData = new Bundle();
+            taskData.putInt("TaskDbID", taskList.get(mPosition).getId());
+            editTaskIntent.putExtras(taskData);
+            arg0.getContext().startActivity(editTaskIntent);
 
         }
     }
