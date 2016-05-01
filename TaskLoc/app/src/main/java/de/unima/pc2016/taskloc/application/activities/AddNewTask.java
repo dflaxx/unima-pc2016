@@ -45,6 +45,7 @@ public class AddNewTask extends AppCompatActivity {
     private EditText dateFrom = null;
     private EditText dateTo = null;
     private TextView txtRange = null;
+    private TextView txtTitle = null;
 
     //button
     private Button buttonSave = null;
@@ -74,6 +75,8 @@ public class AddNewTask extends AppCompatActivity {
             editMode = true;
             taskID = savedInstanceState.getInt("TaskDbID");
             Log.d("AddNewTask OnCreate", "Handed TaskID " + taskID);
+            this.txtTitle = (TextView) findViewById(R.id.txtTitle1);
+            txtTitle.setText("Edit Task");
 
         }
 
