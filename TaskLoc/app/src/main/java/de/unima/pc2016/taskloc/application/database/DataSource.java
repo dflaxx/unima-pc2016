@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.location.Location;
 import android.util.Log;
+import android.view.ViewDebug;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,6 +83,7 @@ public class DataSource {
 
 
     }
+
     public void createNewTask(String title, String description, Date startTime,Date endTime, int range){
         String createNewTask = "INSERT INTO "+DBHelper.TASK_TABLE_NAME+" ("+
                 DBHelper.TASK_COLUMN_TASK_ID+", "+
@@ -99,6 +101,28 @@ public class DataSource {
          this.getWritableDB().execSQL(createNewTask);
     }
 
+    public void updateTask (int id, String title, String description, String startTime,String endTime,
+                            int range){
+
+        String updateTask = "UPDATE " + DBHelper.TASK_TABLE_NAME + " SET " +
+                DBHelper.TASK_COLUMN_TITLE+"= ?"+
+                DBHelper.TASK_COLUMN_DESCRIPTION+"= ?"+
+                DBHelper.TASK_COLUMN_START_DATE+"= ?"+
+                DBHelper.TASK_COLUMN_END_DATE+"= ?"+
+                DBHelper.TASK_COLUMN_RANGE + "= ? WHERE " +
+                DBHelper.TASK_COLUMN_TASK_ID + "= " + id;
+
+
+
+        SQLiteStatement stmt = this.getWritableDB().compileStatement(updateTask);
+        stmt.bindString(1, ""+title); //Double quote to cater for nulls
+        stmt.bindString(2, ""+description);
+        stmt.bindString(3, ""+startTime);
+        stmt.bindString(4, "" + endTime);
+        stmt.bindLong(5, range);
+        stmt.execute();
+
+    }
 
 
 

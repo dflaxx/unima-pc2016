@@ -66,11 +66,14 @@ public class AddNewTask extends AppCompatActivity {
 
     private boolean editMode = false;
 
+    private int taskID= -1;
+
+
 
 
     protected void onCreate(final Bundle savedInstanceState) {
         //Todo: add bundle
-        int taskID = 0;
+
         if (savedInstanceState != null){
             editMode = true;
             taskID = savedInstanceState.getInt("TaskDbID");
@@ -239,17 +242,18 @@ public class AddNewTask extends AppCompatActivity {
                     //tcreateTask.start();
                     startActivity(main);
                 }else{
-                    int currTaskId = DataSource.instance(context).createNewTask(
+                    DataSource.instance(context).updateTask(taskID,
                             txtInsertTitle.getText().toString(),
                             txtDescription.getText().toString(),
                             dateFrom.getText().toString(),
                             dateTo.getText().toString(),
                             rangeInMeters);
-                    if (currTaskId != -1){
-                        Log.d("Add newTask", "Current Task ID: " + currTaskId);
-                        DataSource.instance(context).connectLocationWithPlace(currTaskId, selectedLocations);
-                    }
-                    DataSource.instance(context).deleteTask(savedInstanceState.getInt("TaskDbID"));
+                    // TODO implement location change
+                    //if (currTaskId != -1){
+                      //  Log.d("Add newTask", "Current Task ID: " + currTaskId);
+                        //DataSource.instance(context).connectLocationWithPlace(currTaskId, selectedLocations);
+                    //}
+
                     startActivity(main);
 
 
