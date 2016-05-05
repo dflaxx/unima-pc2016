@@ -51,10 +51,7 @@ public class AddNewTask extends AppCompatActivity {
     private Button buttonSave = null;
     private Button buttonCancel = null;
     private Button buttonAddLocation = null;
-
-    //View view
-
-
+    
     //SeekBar
     private SeekBar rangeBar = null;
     private int rangeInMeters=0;
@@ -72,9 +69,8 @@ public class AddNewTask extends AppCompatActivity {
 
 
     protected void onCreate(final Bundle savedInstanceState) {
-        //Todo: add bundle
-
-        if (savedInstanceState != null){
+       //TODO check why if loop doesn't initiate
+       if (savedInstanceState != null){
             editMode = true;
             taskID = savedInstanceState.getInt("TaskDbID");
             Log.d("AddNewTask OnCreate", "Handed TaskID " + taskID);
@@ -211,7 +207,7 @@ public class AddNewTask extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                if( editMode = false) {
+                if( editMode == false) {
 
                     Thread tcreateTask = new Thread() {
 
@@ -249,10 +245,10 @@ public class AddNewTask extends AppCompatActivity {
                             dateTo.getText().toString(),
                             rangeInMeters);
                     // TODO implement location change
-                    //if (currTaskId != -1){
-                      //  Log.d("Add newTask", "Current Task ID: " + currTaskId);
-                        //DataSource.instance(context).connectLocationWithPlace(currTaskId, selectedLocations);
-                    //}
+                    if (taskID != -1){
+                      Log.d("Add newTask", "Current Task ID: " + taskID);
+                        DataSource.instance(context).connectLocationWithPlace(taskID, selectedLocations);
+                    }
 
                     startActivity(main);
 
