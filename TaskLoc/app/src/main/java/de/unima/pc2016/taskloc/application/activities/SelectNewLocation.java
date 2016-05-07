@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +34,7 @@ public class SelectNewLocation extends FragmentActivity implements OnMapReadyCal
 
     private EditText txtLocationName;
     private String locationName;
+    private FloatingActionButton btnAddLocation;
 
     private Location currLocation;
     private LatLng currPosition;
@@ -59,6 +61,19 @@ public class SelectNewLocation extends FragmentActivity implements OnMapReadyCal
                 locationName = txtLocationName.getText().toString();
             }
         });
+        this.btnAddLocation = (FloatingActionButton) findViewById(R.id.fabAddLocation);
+        this.btnAddLocation.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        locationName = txtLocationName.getText().toString();
+                        addLocation.execute(1);
+                        finishActivity(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
+                        finish();
+                    }
+                }
+        );
+
     }
 
 
@@ -125,16 +140,12 @@ public class SelectNewLocation extends FragmentActivity implements OnMapReadyCal
     public void onPause(){
         super.onPause();
 
-        locationName = txtLocationName.getText().toString();
-        this.addLocation.execute(1);
-
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
         finish();
-
     }
 
     private void getAndSetLocation() {
