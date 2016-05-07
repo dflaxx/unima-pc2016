@@ -34,16 +34,6 @@ public class DisplayTask extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Setting the FloatingActionButton
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         //Dummy Stuff
         tv_taskTitle = (TextView) findViewById(R.id.displayTaskView_taskTitle);
         tv_description_header = (TextView) findViewById((R.id.displayTaskView_description_header));
