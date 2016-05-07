@@ -98,7 +98,7 @@ public class AddNewTask extends AppCompatActivity {
         //EditText & Textview
         this.txtInsertTitle = (EditText) findViewById(R.id.txtInsertTitle);
         this.txtDescription = (EditText) findViewById(R.id.txtDescription);
-        this.taskLocation = (EditText) findViewById(R.id.taskLocation);
+
         this.dateFrom = (EditText) findViewById(R.id.dateFrom);
         this.dateTo = (EditText) findViewById(R.id.dateTo);
         this.txtRange = (TextView) findViewById(R.id.txtRange);
@@ -134,39 +134,6 @@ public class AddNewTask extends AppCompatActivity {
             }
         });
 
-        //ListenerTaskLocation
-        taskLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(AddNewTask.this);
-                builder.setMessage("Please choose an action.");
-                builder.setCancelable(true);
-
-                builder.setPositiveButton("Map", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        // startActivity(map);
-
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-
-                AlertDialog mapDialog = builder.create();
-                mapDialog.show();
-
-
-                //setting text to show location names
-                //TODO take location names and show in field
-                //taskLocation.setText();
-            }
-        });
 
         //Initial Range Bar Value
         rangeBar.setProgress(500);
@@ -193,13 +160,13 @@ public class AddNewTask extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 int range = seekBar.getProgress();
-                rangeInMeters = range;
+                //rangeInMeters = range;
                 if (range < 1000) {
-                    txtRange.setText("Current reminder range is " + range + " meters.");
+                    txtRange.setText("Current reminder range is " + range + " m.");
 
                 } else{
-                    txtRange.setText("Current reminder range is " + range/1000 + " kilometers and " +
-                            range%1000 + " meters.");
+                    txtRange.setText("Current reminder range is " + range/1000 + " km and " +
+                            range%1000 + " m.");
                 }
             }
         });
@@ -342,7 +309,7 @@ public class AddNewTask extends AppCompatActivity {
         public void onClick(View view) {
             //Get locations from DB
             locationList = DataSource.instance(getApplicationContext()).getAllLocation();
-            Log.d("this.locationList","this.locationList: " + locationList);
+
 
             //Show Dialog
             if(selectedLocations.size() > 0)
