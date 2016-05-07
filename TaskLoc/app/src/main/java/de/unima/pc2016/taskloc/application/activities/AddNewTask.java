@@ -73,7 +73,6 @@ public class AddNewTask extends AppCompatActivity {
 
     protected void onCreate(final Bundle savedInstanceState) {
         //Todo: add bundle
-
         if (savedInstanceState != null){
             editMode = true;
             taskID = savedInstanceState.getInt("TaskDbID");
@@ -211,7 +210,7 @@ public class AddNewTask extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                if( editMode = false) {
+                if( editMode == false) {
 
                     Thread tcreateTask = new Thread() {
 
