@@ -10,6 +10,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +22,7 @@ import de.unima.pc2016.taskloc.application.database.DataSource;
 import de.unima.pc2016.taskloc.application.database.LocationDataObject;
 import de.unima.pc2016.taskloc.application.database.TaskDataObject;
 
-public class DisplayTask extends AppCompatActivity {
+public class DisplayTask extends AppCompatActivity implements OnMapReadyCallback {
 
     //Attributes
     private TextView tv_taskTitle;
@@ -33,6 +37,11 @@ public class DisplayTask extends AppCompatActivity {
         setContentView(R.layout.activity_display_task);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //Load google maps
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
         //Dummy Stuff
         tv_taskTitle = (TextView) findViewById(R.id.displayTaskView_taskTitle);
@@ -113,4 +122,8 @@ public class DisplayTask extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+    }
 }
