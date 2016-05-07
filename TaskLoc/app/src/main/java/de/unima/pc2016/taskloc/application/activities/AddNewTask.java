@@ -70,18 +70,20 @@ public class AddNewTask extends AppCompatActivity {
 
 
 
-
+    @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        //Todo: add bundle
-        if (savedInstanceState != null){
+        super.onCreate(savedInstanceState);
+        this.context = this.getApplicationContext();
+        setContentView(R.layout.activity_add_new_task);
+
+        Bundle bundle = this.getIntent().getExtras();
+        if (bundle != null){
             editMode = true;
-            taskID = savedInstanceState.getInt("TaskDbID");
-            Log.d("AddNewTask OnCreate", "Handed TaskID " + taskID);
+            taskID = bundle.getInt("id");
             this.txtTitle = (TextView) findViewById(R.id.txtTitle1);
-            txtTitle.setText("Edit Task");
+            txtTitle.setText("Edit Task"+ taskID+ "");
 
         }
-
 
 
         this.locationList = DataSource.instance(this.getApplicationContext()).getAllLocation();
@@ -91,9 +93,7 @@ public class AddNewTask extends AppCompatActivity {
         final Intent main = new Intent(AddNewTask.this, StartActivity.class);
 
 
-        super.onCreate(savedInstanceState);
-        this.context = this.getApplicationContext();
-        setContentView(R.layout.activity_add_new_task);
+
 
         //EditText & Textview
         this.txtInsertTitle = (EditText) findViewById(R.id.txtInsertTitle);
@@ -252,16 +252,24 @@ public class AddNewTask extends AppCompatActivity {
                       //  Log.d("Add newTask", "Current Task ID: " + currTaskId);
                         //DataSource.instance(context).connectLocationWithPlace(currTaskId, selectedLocations);
                     //}
-
                     startActivity(main);
-
-
-
-
                 }
 
             }
         });
+
+
+        if(editMode){
+            TaskDataObject tdo = DataSource.instance(this).getTaskByID(taskID);
+            if(tdo != null ){
+                txtInsertTitle.setText(tdo.getTitle());
+                txtDescription.setText(tdo.getDescription());
+                locationList = tdo.getLocations();
+                dateFrom.setText(tdo.getStartDate().toString());
+                dateTo.setText(tdo.getEndDate().toString());
+                rangeBar.setProgress(tdo.getRange());
+            }
+        }
 
         //ListenerCancel
         buttonCancel.setOnClickListener(new View.OnClickListener() {
@@ -274,18 +282,7 @@ public class AddNewTask extends AppCompatActivity {
         setOnclick(this.dateFrom);
         setOnclick(this.dateTo);
 
-        if(editMode){
-            TaskDataObject tdo = DataSource.instance(this).getTaskByID(taskID);
-            if(tdo != null){
-                txtInsertTitle.setText(tdo.getTitle());
-                txtDescription.setText(tdo.getDescription());
-                locationList = tdo.getLocations();
-                dateFrom.setText(tdo.getStartDate().toString());
-                dateTo.setText(tdo.getEndDate().toString());
-                rangeBar.setProgress(tdo.getRange());
-            }
 
-        }
     }
 
     @Override
