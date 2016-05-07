@@ -70,22 +70,22 @@ public class AddNewTask extends AppCompatActivity {
 
 
 
-
+    @Override
     protected void onCreate(final Bundle savedInstanceState) {
-       //TODO check why if loop doesn't initiate
 
+        super.onCreate(savedInstanceState);
+        this.context = this.getApplicationContext();
+        setContentView(R.layout.activity_add_new_task);
 
-
-
-       if (getIntent().getExtras() != null ){
+        Bundle bundle = this.getIntent().getExtras();
+        if (bundle != null){
             editMode = true;
-            taskID = getIntent().getExtras().getInt("TaskDbId");
-//            Log.d("AddNewTask OnCreate", "Handed TaskID " + taskID);
+            taskID = bundle.getInt("id");
+            this.txtTitle = (TextView) findViewById(R.id.txtTitle1);
+            txtTitle.setText("Edit Task"+ taskID+ "");
 
-            setContentView(R.layout.activity_edit_task);
 
         }
-
 
 
 
@@ -96,14 +96,12 @@ public class AddNewTask extends AppCompatActivity {
         final Intent main = new Intent(AddNewTask.this, StartActivity.class);
 
 
-        super.onCreate(savedInstanceState);
-        this.context = this.getApplicationContext();
-        setContentView(R.layout.activity_add_new_task);
+
 
         //EditText & Textview
         this.txtInsertTitle = (EditText) findViewById(R.id.txtInsertTitle);
         this.txtDescription = (EditText) findViewById(R.id.txtDescription);
-        this.taskLocation = (EditText) findViewById(R.id.taskLocation);
+
         this.dateFrom = (EditText) findViewById(R.id.dateFrom);
         this.dateTo = (EditText) findViewById(R.id.dateTo);
         this.txtRange = (TextView) findViewById(R.id.txtRange);
@@ -166,13 +164,13 @@ public class AddNewTask extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 int range = seekBar.getProgress();
-                rangeInMeters = range;
+                //rangeInMeters = range;
                 if (range < 1000) {
-                    txtRange.setText("Current reminder range is " + range + " meters.");
+                    txtRange.setText("Current reminder range is " + range + " m.");
 
                 } else{
-                    txtRange.setText("Current reminder range is " + range/1000 + " kilometers and " +
-                            range%1000 + " meters.");
+                    txtRange.setText("Current reminder range is " + range/1000 + " km and " +
+                            range%1000 + " m.");
                 }
             }
         });
@@ -221,20 +219,31 @@ public class AddNewTask extends AppCompatActivity {
                             dateTo.getText().toString(),
                             rangeInMeters);
                     // TODO implement location change
+
                     if (taskID != -1){
                       Log.d("Add newTask", "Current Task ID: " + taskID);
                         DataSource.instance(context).connectLocationWithPlace(taskID, selectedLocations);
                     }
 
+
                     startActivity(main);
-
-
-
-
                 }
 
             }
         });
+
+
+        if(editMode){
+            TaskDataObject tdo = DataSource.instance(this).getTaskByID(taskID);
+            if(tdo != null ){
+                txtInsertTitle.setText(tdo.getTitle());
+                txtDescription.setText(tdo.getDescription());
+                locationList = tdo.getLocations();
+                dateFrom.setText(tdo.getStartDate().toString());
+                dateTo.setText(tdo.getEndDate().toString());
+                rangeBar.setProgress(tdo.getRange());
+            }
+        }
 
         //ListenerCancel
         buttonCancel.setOnClickListener(new View.OnClickListener() {
@@ -247,18 +256,7 @@ public class AddNewTask extends AppCompatActivity {
         setOnclick(this.dateFrom);
         setOnclick(this.dateTo);
 
-        if(editMode){
-            TaskDataObject tdo = DataSource.instance(this).getTaskByID(taskID);
-            if(tdo != null){
-                txtInsertTitle.setText(tdo.getTitle());
-                txtDescription.setText(tdo.getDescription());
-                locationList = tdo.getLocations();
-                dateFrom.setText(tdo.getStartDate().toString());
-                dateTo.setText(tdo.getEndDate().toString());
-                rangeBar.setProgress(tdo.getRange());
-            }
 
-        }
     }
 
     @Override
@@ -318,7 +316,7 @@ public class AddNewTask extends AppCompatActivity {
         public void onClick(View view) {
             //Get locations from DB
             locationList = DataSource.instance(getApplicationContext()).getAllLocation();
-            Log.d("this.locationList","this.locationList: " + locationList);
+
 
             //Show Dialog
             if(selectedLocations.size() > 0)

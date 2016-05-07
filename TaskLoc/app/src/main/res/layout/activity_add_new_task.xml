@@ -35,13 +35,17 @@
             android:id="@+id/txtInsertTitle"
             android:layout_gravity="center_horizontal"
             android:clickable="true"
-            android:hint="Insert Title" />
+            android:hint="Insert Title"
+            android:layout_margin="10dp" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/txtDescription"
-            android:hint="Insert Description" />
+            android:hint="Insert Description"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp" />
 
         <Button
             android:layout_width="match_parent"
@@ -53,7 +57,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/taskLocation"
-            android:hint="Locations" />
+            android:hint="Locations" 
+            android:layout_marginBottom="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -71,7 +79,8 @@
             android:id="@+id/dateFrom"
             android:clickable="true"
             android:hint="Date From"
-            android:focusable="false"/>
+            android:focusable="false"
+            android:layout_marginBottom="5dp" />
 
         <EditText
             android:layout_width="match_parent"
@@ -88,7 +97,8 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Reminder Range (meters)"
-            android:id="@+id/textView" />
+            android:id="@+id/textView"
+            android:layout_marginTop="20dp" />
 
         <SeekBar
             android:layout_width="match_parent"
@@ -104,31 +114,41 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text=" "
             android:id="@+id/txtRange" />
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="1"
+            android:layout_gravity="bottom">
 
-        <TableRow android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_gravity="bottom">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:text="Save"
-            android:id="@+id/buttonSave"
-            android:clickable="true" />
+            <TableRow android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                >
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="Save"
+                    android:id="@+id/buttonSave"
+                    android:clickable="true"
+                    android:layout_weight=".5"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:text="Cancel"
-            android:id="@+id/buttonCancel"
-            android:clickable="true" />
-        </TableRow>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="Cancel"
+                    android:id="@+id/buttonCancel"
+                    android:clickable="true"
+                    android:layout_weight=".5"/>
+            </TableRow>
+
+        </TableLayout>
+
         <FrameLayout
             android:id="@+id/mapFragmentHolder"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
         </FrameLayout>
 
 

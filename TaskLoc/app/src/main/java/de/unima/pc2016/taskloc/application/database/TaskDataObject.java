@@ -15,8 +15,8 @@ public class TaskDataObject {
     private int id;
     private String title;
     private String description;
-    private Date startDate;
-    private Date endDate;
+    private String startDate;
+    private String endDate;
     private int range;
     private List<LocationDataObject> locations;
     SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
@@ -78,25 +78,20 @@ public class TaskDataObject {
     }
 
 
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public Date getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    // TODO: This method does not do what it seems to do! -> Implement String parsing to date.
     public void setStartDate(String startDate) {
-        Calendar cal = Calendar.getInstance();
-        this.startDate = cal.getTime();
+        this.startDate = startDate;
     }
 
-    // TODO: This method does not do what it seems to do! -> Implement String parsing to date.
     public void setEndDate(String endDate) {
-        Calendar cal = Calendar.getInstance();
-        //cal.setTime(sdf.parse(endDate));
-        this.endDate = cal.getTime();
+        this.endDate = endDate;
     }
 
     public List<LocationDataObject> getLocations(){
