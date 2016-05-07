@@ -1,7 +1,9 @@
 package de.unima.pc2016.taskloc.application.activities;
 
+import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -164,24 +167,45 @@ public class TaskListAdapter extends BaseAdapter {
 
 
         public void onClick(View view){
-            removeTaskByID(id);
-            Thread deleteFromDatabase = new Thread(){
-                public void run(){
-                    DataSource.instance(context).deleteTask(id);
-                }
-            };
-            deleteFromDatabase.start();
 
-            Thread deleteFromGeofence = new Thread(){
-                public void run(){
-                    GeofenceController.getInstance(context).removeTaskFromGeofenceList(id);
-                }
-            };
+            final AlertDialog.Builder builderDialog = new AlertDialog.Builder(context);
 
-            if(GeofenceTransitionsIntentService.notificationContext != null){
-                NotificationManager notificationManager = (NotificationManager) context.getSystemService(GeofenceTransitionsIntentService.notificationContext.NOTIFICATION_SERVICE);
-                notificationManager.cancel(id);
-            }
+            builderDialog.setPositiveButton("Delete Selected Task",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            removeTaskByID(id);
+                            Thread deleteFromDatabase = new Thread(){
+                                public void run(){
+                                    DataSource.instance(context).deleteTask(id);
+                                }
+                            };
+                            deleteFromDatabase.start();
+
+                            Thread deleteFromGeofence = new Thread(){
+                                public void run(){
+                                    GeofenceController.getInstance(context).removeTaskFromGeofenceList(id);
+                                }
+                            };
+
+                            if(GeofenceTransitionsIntentService.notificationContext != null){
+                                NotificationManager notificationManager = (NotificationManager) context.getSystemService(GeofenceTransitionsIntentService.notificationContext.NOTIFICATION_SERVICE);
+                                notificationManager.cancel(id);
+                            }
+                        }
+                    });
+
+            builderDialog.setNegativeButton("Cancel",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+            AlertDialog alert = builderDialog.create();
+            alert.show();
+
+
 
 
 
