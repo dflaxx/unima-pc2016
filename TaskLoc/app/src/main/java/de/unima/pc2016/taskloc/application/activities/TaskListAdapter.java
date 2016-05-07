@@ -140,7 +140,7 @@ public class TaskListAdapter extends BaseAdapter {
             Log.d(TAG, taskList.get(mPosition)+ " was selected");
             Intent editTaskIntent = new Intent (context, AddNewTask.class);
             Bundle taskData = new Bundle();
-            taskData.putInt("TaskDbID", taskid);
+            taskData.putInt("TaskDbID",taskid);
             editTaskIntent.putExtras(taskData);
             arg0.getContext().startActivity(editTaskIntent);
 

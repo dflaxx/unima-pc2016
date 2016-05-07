@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +17,8 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.security.KeyStore;
 import java.text.SimpleDateFormat;
@@ -45,7 +48,7 @@ public class AddNewTask extends AppCompatActivity {
     private EditText dateFrom = null;
     private EditText dateTo = null;
     private TextView txtRange = null;
-    private TextView txtTitle = null;
+    private TextView txtTitle1 = null;
 
     //button
     private Button buttonSave = null;
@@ -70,14 +73,19 @@ public class AddNewTask extends AppCompatActivity {
 
     protected void onCreate(final Bundle savedInstanceState) {
        //TODO check why if loop doesn't initiate
-       if (savedInstanceState != null){
+
+
+
+
+       if (getIntent().getExtras() != null ){
             editMode = true;
-            taskID = savedInstanceState.getInt("TaskDbID");
-            Log.d("AddNewTask OnCreate", "Handed TaskID " + taskID);
-            this.txtTitle = (TextView) findViewById(R.id.txtTitle1);
-            txtTitle.setText("Edit Task");
+            taskID = getIntent().getExtras().getInt("TaskDbId");
+//            Log.d("AddNewTask OnCreate", "Handed TaskID " + taskID);
+
+            setContentView(R.layout.activity_edit_task);
 
         }
+
 
 
 
@@ -131,39 +139,7 @@ public class AddNewTask extends AppCompatActivity {
             }
         });
 
-        //ListenerTaskLocation
-        taskLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(AddNewTask.this);
-                builder.setMessage("Please choose an action.");
-                builder.setCancelable(true);
 
-                builder.setPositiveButton("Map", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        // startActivity(map);
-
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-
-                AlertDialog mapDialog = builder.create();
-                mapDialog.show();
-
-
-                //setting text to show location names
-                //TODO take location names and show in field
-                //taskLocation.setText();
-            }
-        });
 
         //Initial Range Bar Value
         rangeBar.setProgress(500);
