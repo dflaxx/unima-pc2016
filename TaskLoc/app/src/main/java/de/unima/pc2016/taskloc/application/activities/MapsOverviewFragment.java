@@ -50,6 +50,7 @@ public class MapsOverviewFragment extends Fragment implements OnMapReadyCallback
                 R.layout.fragment_map, container, false);
 
         this.context = rootView.getContext();
+
         SupportMapFragment mp = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map_overview));
         if (mp != null) {
             mp.getMapAsync(this);

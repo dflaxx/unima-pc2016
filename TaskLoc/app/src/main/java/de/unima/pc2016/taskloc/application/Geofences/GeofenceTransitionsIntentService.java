@@ -96,6 +96,8 @@ public class GeofenceTransitionsIntentService extends IntentService{
                         .setContentText("Task: "+ taskList.getTitle()); // Message shown in notification bar
 // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(this, DisplayTask.class);
+        resultIntent.putExtra("taskID", taskID);
+
 // The stack builder object will contain an artificial back stack for the
 // started Activity.
 // This ensures that navigating backward from the Activity leads out of
