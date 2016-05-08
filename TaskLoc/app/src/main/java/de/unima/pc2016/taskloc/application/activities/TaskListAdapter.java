@@ -139,20 +139,13 @@ public class TaskListAdapter extends BaseAdapter {
 
         @Override
         public void onClick(View arg0) {
-<<<<<<< HEAD
-            int taskid = taskList.get(mPosition).getId();
-            Log.d(TAG, taskList.get(mPosition)+ " was selected");
-            Intent editTaskIntent = new Intent (context, AddNewTask.class);
-            Bundle taskData = new Bundle();
-            taskData.putInt("TaskDbID",taskid);
-=======
+
            Log.d(TAG, taskList.get(mPosition)+ " was selected" + " "+ id);
 
             Intent editTaskIntent = new Intent (context, AddNewTask.class);
             Bundle taskData = new Bundle();
             taskData.putInt("id", id);
 
->>>>>>> 7d1adbb32a9cec21f5de4525d2343a33d6faab04
             editTaskIntent.putExtras(taskData);
 
             context.startActivity(editTaskIntent);

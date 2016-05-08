@@ -105,12 +105,12 @@ public class DataSource {
                             int range){
 
         String updateTask = "UPDATE " + DBHelper.TASK_TABLE_NAME + " SET " +
-                DBHelper.TASK_COLUMN_TITLE+"= ?"+
-                DBHelper.TASK_COLUMN_DESCRIPTION+"= ?"+
-                DBHelper.TASK_COLUMN_START_DATE+"= ?"+
-                DBHelper.TASK_COLUMN_END_DATE+"= ?"+
+                DBHelper.TASK_COLUMN_TITLE+"= ?,"+
+                DBHelper.TASK_COLUMN_DESCRIPTION+"= ?,"+
+                DBHelper.TASK_COLUMN_START_DATE+"= ?,"+
+                DBHelper.TASK_COLUMN_END_DATE+"= ?,"+
                 DBHelper.TASK_COLUMN_RANGE + "= ? WHERE " +
-                DBHelper.TASK_COLUMN_TASK_ID + "= " + id;
+                DBHelper.TASK_COLUMN_TASK_ID + "= " + id + ";";
 
 
 

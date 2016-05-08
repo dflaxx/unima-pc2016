@@ -81,8 +81,8 @@ public class AddNewTask extends AppCompatActivity {
         if (bundle != null){
             editMode = true;
             taskID = bundle.getInt("id");
-            this.txtTitle = (TextView) findViewById(R.id.txtTitle1);
-            txtTitle.setText("Edit Task"+ taskID+ "");
+            this.txtTitle1 = (TextView) findViewById(R.id.txtTitle1);
+            txtTitle1.setText("Edit Task"+ taskID+ "");
 
 
         }
@@ -276,7 +276,7 @@ public class AddNewTask extends AppCompatActivity {
                     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
                     Date date = sdf.parse(datum);
                     mCurrentDate.setTime(date);
-                }catch (java.text.ParseException e) {
+                }catch (java.text.ParseException e) {}
                     int mYear = mCurrentDate.get(Calendar.YEAR);
                     int mMonth = mCurrentDate.get(Calendar.MONTH);
                     int mDay = mCurrentDate.get(Calendar.DAY_OF_MONTH);
@@ -292,7 +292,7 @@ public class AddNewTask extends AppCompatActivity {
                     datePicker.setTitle("Please select a date");
                     datePicker.show();
 
-                }
+
 
                 }
 
