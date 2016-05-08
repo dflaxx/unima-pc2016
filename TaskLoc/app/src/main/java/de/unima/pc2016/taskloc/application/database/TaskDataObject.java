@@ -19,6 +19,8 @@ public class TaskDataObject {
     private String endDate;
     private int range;
     private List<LocationDataObject> locations;
+    private Double distance;
+
     SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
 
     private String TAG = "TaskDataObject";
@@ -32,6 +34,7 @@ public class TaskDataObject {
         this.setEndDate(attributes[4]);
         this.setRange(Integer.parseInt(attributes[5]));
         this.locations = locations;
+        this.distance = 9999.0; //Distanz für Sortierung
     }
 
     public TaskDataObject(String[] attributes){
@@ -41,6 +44,7 @@ public class TaskDataObject {
         this.setStartDate(attributes[3]);
         this.setEndDate(attributes[4]);
         this.setRange(Integer.parseInt(attributes[5]));
+        this.distance = 0.0; //Distanz für Sortierung
 
     }
 
@@ -93,6 +97,17 @@ public class TaskDataObject {
     public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
+
+    public void setDistance(Double distance) {
+        this.distance = distance;
+    } //Distanz für Sortierung
+
+    public Double getDistance() {
+        return distance;
+    } //Distanz für Sortierung
+
+
+
 
     public List<LocationDataObject> getLocations(){
         return this.locations;
