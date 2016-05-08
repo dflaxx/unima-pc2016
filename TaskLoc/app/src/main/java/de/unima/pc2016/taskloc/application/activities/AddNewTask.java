@@ -211,6 +211,7 @@ public class AddNewTask extends AppCompatActivity {
                     }
                     //tcreateTask.start();
                     startActivity(main);
+                    finish();
                 }else{
                     DataSource.instance(context).updateTask(taskID,
                             txtInsertTitle.getText().toString(),
@@ -227,6 +228,7 @@ public class AddNewTask extends AppCompatActivity {
 
 
                     startActivity(main);
+                    finish();
                 }
 
             }
@@ -260,6 +262,7 @@ public class AddNewTask extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(main);
+                finish();
             }
         });
 
