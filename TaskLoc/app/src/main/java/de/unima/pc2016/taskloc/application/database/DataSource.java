@@ -145,6 +145,29 @@ public class DataSource {
         }
     }
 
+    public List<TaskDataObject> getTaskByIDWithLocations(int id){
+        String getTaskWithLocation = "SELECT * FROM (("+DBHelper.TASK_TABLE_NAME+
+                " AS A JOIN "+
+                DBHelper.HASPLACE_TABEL_NAME+ " AS B ON A."+
+                DBHelper.TASK_COLUMN_TASK_ID +" = B."+
+                DBHelper.HASPLACE_COLUMN_TASK_ID+") AS TMP JOIN "+
+                DBHelper.LOCATION_TABLE_NAME+ " AS C ON C."+
+                DBHelper.HASPLACE_COLUMN_LOCATION_ID+" = TMP."+DBHelper.LOCATION_COLUMN_ID
+                +") WHERE A." +DBHelper.TASK_COLUMN_TASK_ID+" = "+id +
+                " ORDER BY TMP."+DBHelper.TASK_COLUMN_TASK_ID+" ASC;";
+
+        List<TaskDataObject> currentTaskList = null;
+        Cursor cursor = this.getReadableDB().rawQuery(getTaskWithLocation, null);
+        if(cursor != null && cursor.getCount() > 0){
+            //this.printJoin(cursor);
+            currentTaskList = this.createTaskWithLocation(cursor);
+            return currentTaskList;
+        }
+
+        cursor.close();
+        return currentTaskList;
+    }
+
     public List<TaskDataObject> getAllTask(){
         String selectAll = "Select * from "+ DBHelper.TASK_TABLE_NAME+";";
 

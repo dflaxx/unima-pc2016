@@ -18,15 +18,23 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.gcm.Task;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.SphericalUtil;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
 import de.unima.pc2016.taskloc.R;
 import de.unima.pc2016.taskloc.application.database.CreateTestData;
 import de.unima.pc2016.taskloc.application.database.DataSource;
+import de.unima.pc2016.taskloc.application.database.LocationDataObject;
 import de.unima.pc2016.taskloc.application.database.TaskDataObject;
 
 /**
@@ -38,6 +46,13 @@ public class TaskOverviewFragment extends Fragment {
     protected List<TaskDataObject> list;
     protected TaskListAdapter taskListAdapter;
     private Context context;
+
+
+    private double longitude;
+    private double latitude;
+
+    private double toLongitude;
+    private double toLatitude;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,6 +77,9 @@ public class TaskOverviewFragment extends Fragment {
 
     @Override
     public void onStart() {
+
+
+
         super.onStart();
 
     }
@@ -99,35 +117,90 @@ public class TaskOverviewFragment extends Fragment {
 
         @Override
         protected List<TaskDataObject> doInBackground(Integer... integers) {
+
             List<TaskDataObject> currentTaskList = DataSource.instance(context).getAllTask();
+
             HashMap<String, Double> distanceToCurrentPosition = new HashMap<>();
+
+
             LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+            Log.d("TaskLocDebug", "Permissioncheck steht an");
+
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, " Task werden nicht geladen, da Location nicht Activiert");
+                Log.d("TaskLocDebug", " Task werden nicht geladen, da Location nicht Activiert");
                 return null;
             }
+
+
+
             Location currLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+            if (currLocation != null) { // Prüfen, ob letzte Location vorhanden
+                Log.i("TaskLocDebug", "LastLocation erhalten");
+
+                //Getting longitude and latitude
+                longitude = currLocation.getLongitude();
+                latitude = currLocation.getLatitude();
+
+                Log.i("TaskLocDebug", "LastLocation Longitude:  "+ longitude);
+                Log.i("TaskLocDebug", "LastLocation Latitude:   " +  latitude);
+            }
+
             //ToDo: Get Distance to location
 
             if (currentTaskList != null) {
 
+                Log.d("TaskLocDebug", "Innerhalb if-Block");
+
                 for(TaskDataObject currObj : currentTaskList){
-                /*double dist = 6378.388 * Math.acos(
-                        Math.sin(currObj.getLocations().get(0).getLatitude())*
-                        Math.sin(currLocation.getLatitude() +
-                        Math.cos(currObj.getLocations().get(0).getLatitude()))*
-                        Math.cos(currLocation.getLatitude() *
-                        Math.cos(currLocation.getLongitude() - currObj.getLocations().get(0).getLongitude())) );*/
+                    Log.d("TaskLocDebug", "Innerhalb 1. for-Schleife");
+                    Log.d("TaskLocDebug", "TaskID: " + currObj.getId());
+
+
+
+
+                    List<LocationDataObject> locationlist = currObj.getLocations();
+                    /*
+                    Aktueller Bug:
+                    locationlist enthält keine Locations bzw. Null-reference. Rücksprache mit Sven
+                     */
+
+                    if (locationlist != null) {
+
+                        for (LocationDataObject tempLocation : locationlist) { // Alle Locations zu einer Task aufrufen
+
+                            Log.d("TaskLocDebug", "Innerhalb 2. for-Schleife");
+
+                            // Latitude & Longitude berechnen
+                            toLatitude = tempLocation.getLatitude();
+                            toLongitude =  tempLocation.getLongitude();
+
+                            LatLng from = new LatLng(latitude,longitude);
+                            LatLng to = new LatLng(toLatitude,toLongitude);
+                            //distanzberechnung anhand Library (build.gradle beachten)
+                            Double distance = SphericalUtil.computeDistanceBetween(from, to);
+
+                            currObj.setDistance(distance);
+
+
+                        }
+                    }
+
+
                 }
 
-                //ToDo: Sort Values after Current Position
-                /*
-                dist = 6378.388 * acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2 - lon1))
-                https://www.kompf.de/gps/distcalc.html
-                 */
+                Log.d("TaskLocDebug", "Sortieren der Liste");
+
+                Collections.sort(currentTaskList, new Comparator<TaskDataObject>() {
+                    public int compare(TaskDataObject task1, TaskDataObject task2) {
+                        return task1.getDistance().compareTo(task2.getDistance());
+                    }
+                });
+
 
                 return currentTaskList;
             }
+
 
             return null;
         }
@@ -137,6 +210,7 @@ public class TaskOverviewFragment extends Fragment {
             if (currentTaskList != null) {
                 taskListAdapter.clear();
                 for (TaskDataObject aktienString : currentTaskList) {
+
                     taskListAdapter.addTask(aktienString);
                 }
             }

@@ -50,6 +50,7 @@ public class MapsOverviewFragment extends Fragment implements OnMapReadyCallback
                 R.layout.fragment_map, container, false);
 
         this.context = rootView.getContext();
+
         SupportMapFragment mp = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map_overview));
         if (mp != null) {
             mp.getMapAsync(this);
@@ -226,13 +227,13 @@ public class MapsOverviewFragment extends Fragment implements OnMapReadyCallback
             }
             mMap.clear();
 
-            if (currPosition != null) {
-                mMap.addMarker(new MarkerOptions().position(currPosition).title("Aktuelle Position"));
-                //mMap.moveCamera(CameraUpdateFactory.newLatLng(currPosition));
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(currPosition, 15);
-
-                mMap.animateCamera(cameraUpdate);
-            }
+//            if (currPosition != null) {
+//                mMap.addMarker(new MarkerOptions().position(currPosition).title("Aktuelle Position"));
+//                //mMap.moveCamera(CameraUpdateFactory.newLatLng(currPosition));
+//                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(currPosition, 15);
+//
+//                mMap.animateCamera(cameraUpdate);
+//            }
 
             if (currentTaskList != null) {
                 for (TaskDataObject taskDataObject : currentTaskList) {
