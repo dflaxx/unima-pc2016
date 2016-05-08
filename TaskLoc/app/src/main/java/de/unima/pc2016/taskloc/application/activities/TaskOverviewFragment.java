@@ -47,7 +47,7 @@ public class TaskOverviewFragment extends Fragment {
     protected TaskListAdapter taskListAdapter;
     private Context context;
 
-    private GoogleApiClient googleApiClient;
+
     private double longitude;
     private double latitude;
 

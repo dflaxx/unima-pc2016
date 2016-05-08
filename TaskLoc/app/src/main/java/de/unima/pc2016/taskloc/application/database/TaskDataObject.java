@@ -44,7 +44,7 @@ public class TaskDataObject {
         this.setStartDate(attributes[3]);
         this.setEndDate(attributes[4]);
         this.setRange(Integer.parseInt(attributes[5]));
-        this.distance = 0.0; //Distanz für Sortierung
+        this.distance = 9999.0; //Distanz für Sortierung
 
     }
 
