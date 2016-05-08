@@ -164,7 +164,7 @@ public class AddNewTask extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 int range = seekBar.getProgress();
-                //rangeInMeters = range;
+                rangeInMeters = range;
                 if (range < 1000) {
                     txtRange.setText("Current reminder range is " + range + " m.");
 
@@ -236,12 +236,22 @@ public class AddNewTask extends AppCompatActivity {
         if(editMode){
             TaskDataObject tdo = DataSource.instance(this).getTaskByID(taskID);
             if(tdo != null ){
+                int rangeEdit = tdo.getRange();
                 txtInsertTitle.setText(tdo.getTitle());
                 txtDescription.setText(tdo.getDescription());
                 locationList = tdo.getLocations();
                 dateFrom.setText(tdo.getStartDate().toString());
                 dateTo.setText(tdo.getEndDate().toString());
-                rangeBar.setProgress(tdo.getRange());
+                rangeBar.setProgress(rangeEdit);
+
+                if ( rangeEdit < 1000) {
+                    txtRange.setText("Current reminder range is " + rangeEdit + " m.");
+
+                } else{
+                    txtRange.setText("Current reminder range is " + rangeEdit/1000 + " km and " +
+                            rangeEdit%1000 + " m.");
+                }
+
             }
         }
 
