@@ -118,7 +118,7 @@ public class TaskOverviewFragment extends Fragment {
         @Override
         protected List<TaskDataObject> doInBackground(Integer... integers) {
 
-            List<TaskDataObject> currentTaskList = DataSource.instance(context).getAllTask();
+            List<TaskDataObject> currentTaskList = DataSource.instance(context).getAllTaskWithLocation();
 
             HashMap<String, Double> distanceToCurrentPosition = new HashMap<>();
 

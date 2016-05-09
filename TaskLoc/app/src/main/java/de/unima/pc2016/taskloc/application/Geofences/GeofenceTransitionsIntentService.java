@@ -95,9 +95,10 @@ public class GeofenceTransitionsIntentService extends IntentService {
         double toLatitude;
 
         String notificationDistance = "n/a";
+        int convertDistance = 0;
 
         TaskDataObject taskList = DataSource.instance(this.getApplicationContext()).getTaskByID(taskID);
-
+        List <TaskDataObject> taskListWithLocations = DataSource.instance(this.getApplicationContext()).getTaskByIDWithLocations(taskID);
 
         LocationManager locationManager = (LocationManager) this.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 
@@ -126,36 +127,36 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
 
 
-        List<LocationDataObject> locationlist = taskList.getLocations();
-        Log.d("TaskLocNotification", "Laden der Locationlist");
 
-        /*
-        if (taskList.getLocations().size() > 0) {
-            for (LocationDataObject location : taskList.getLocations()) {
 
-                Log.d("TaskLocNotification", "Locationlist erhalten");
+        for (TaskDataObject tempTaskList  : taskListWithLocations)
+        {
+            List<LocationDataObject> locationlist = tempTaskList.getLocations();
+            Log.d("TaskLocNotification", "Laden der Locationlist");
+
+
+            if(locationlist != null){
+                for (LocationDataObject tempLocation : locationlist) { // Alle Locations zu einer Task aufrufen
+
+                    Log.d("TaskLocNotification", "Innerhalb 2. for-Schleife");
+
+                    // Latitude & Longitude berechnen
+                    toLatitude = tempLocation.getLatitude();
+                    toLongitude =  tempLocation.getLongitude();
+
+                    LatLng from = new LatLng(latitude,longitude);
+                    LatLng to = new LatLng(toLatitude,toLongitude);
+                    //distanzberechnung anhand Library (build.gradle beachten)
+                    Double distance = SphericalUtil.computeDistanceBetween(from, to);
+
+                    convertDistance = distance.intValue();
+                    String conversion = distance.toString();
+                    notificationDistance = String.format("%.2f",distance);
+
+                }
             }
-        } else {
-            Log.d(TAG, "No location was assigend to the task");
         }
-        */
 
-        if(locationlist != null){
-            for (LocationDataObject tempLocation : locationlist) { // Alle Locations zu einer Task aufrufen
-
-                            Log.d("TaskLocNotification", "Innerhalb 2. for-Schleife");
-
-                            // Latitude & Longitude berechnen
-                            toLatitude = tempLocation.getLatitude();
-                            toLongitude =  tempLocation.getLongitude();
-
-                            LatLng from = new LatLng(latitude,longitude);
-                            LatLng to = new LatLng(toLatitude,toLongitude);
-                            //distanzberechnung anhand Library (build.gradle beachten)
-                            Double distance = SphericalUtil.computeDistanceBetween(from, to);
-                            notificationDistance = distance.toString();
-            }
-        }
 
 
         Log.d(TAG, "Notification of following task "+ taskList.getTitle());
@@ -163,7 +164,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_taskloc_launcher) //Icon shown in notification bar
                         .setContentTitle("TaskLoc") // Notification title
-                        .setContentText("Task: "+ taskList.getTitle() + " Distanz: "+notificationDistance); // Message shown in notification bar
+                        .setContentText("Task: "+ taskList.getTitle() + " Distanz: "+convertDistance+" Meter"); // Message shown in notification bar
 // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(this, DisplayTask.class);
         resultIntent.putExtra("taskID", taskID);
