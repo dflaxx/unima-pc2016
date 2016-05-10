@@ -54,6 +54,8 @@ public class TaskOverviewFragment extends Fragment {
     private double toLongitude;
     private double toLatitude;
 
+    private double shortestDistanceToTask;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -120,7 +122,7 @@ public class TaskOverviewFragment extends Fragment {
 
             List<TaskDataObject> currentTaskList = DataSource.instance(context).getAllTaskWithLocation();
 
-            HashMap<String, Double> distanceToCurrentPosition = new HashMap<>();
+            //HashMap<String, Double> distanceToCurrentPosition = new HashMap<>();
 
 
             LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -146,7 +148,6 @@ public class TaskOverviewFragment extends Fragment {
                 Log.i("TaskLocDebug", "LastLocation Latitude:   " +  latitude);
             }
 
-            //ToDo: Get Distance to location
 
             if (currentTaskList != null) {
 
@@ -160,30 +161,32 @@ public class TaskOverviewFragment extends Fragment {
 
 
                     List<LocationDataObject> locationlist = currObj.getLocations();
-                    /*
-                    Aktueller Bug:
-                    locationlist enthält keine Locations bzw. Null-reference. Rücksprache mit Sven
-                     */
+
 
                     if (locationlist != null) {
-
+                        shortestDistanceToTask = 50000; // initialization of variable for later usage.
                         for (LocationDataObject tempLocation : locationlist) { // Alle Locations zu einer Task aufrufen
 
                             Log.d("TaskLocDebug", "Innerhalb 2. for-Schleife");
 
                             // Latitude & Longitude berechnen
+
+                            // Koordianten der jeweiligen Task
                             toLatitude = tempLocation.getLatitude();
                             toLongitude =  tempLocation.getLongitude();
 
-                            LatLng from = new LatLng(latitude,longitude);
+                            LatLng from = new LatLng(latitude,longitude); // Letzte bekannte Koordinaten des Geräts
                             LatLng to = new LatLng(toLatitude,toLongitude);
                             //distanzberechnung anhand Library (build.gradle beachten)
                             Double distance = SphericalUtil.computeDistanceBetween(from, to);
+                            if(distance <= shortestDistanceToTask ){shortestDistanceToTask=distance;}
 
-                            currObj.setDistance(distance);
 
 
                         }
+
+                        currObj.setDistance(shortestDistanceToTask);
+
                     }
 
 
@@ -191,6 +194,7 @@ public class TaskOverviewFragment extends Fragment {
 
                 Log.d("TaskLocDebug", "Sortieren der Liste");
 
+                // Sortierung der Liste der Größe nach
                 Collections.sort(currentTaskList, new Comparator<TaskDataObject>() {
                     public int compare(TaskDataObject task1, TaskDataObject task2) {
                         return task1.getDistance().compareTo(task2.getDistance());

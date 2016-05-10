@@ -86,9 +86,10 @@ public class GeofenceTransitionsIntentService extends IntentService {
     }
 
     public void createNotification(int taskID) {
-        //Placed here for demo usage
+        //Title of Notification
         String title = String.valueOf(R.string.notification_title);
 
+        // Used for distance calculation
         double longitude = 0;
         double latitude = 0;
 
@@ -96,20 +97,27 @@ public class GeofenceTransitionsIntentService extends IntentService {
         double toLatitude;
 
         String notificationDistance = "n/a";
-        int convertDistance = 0;
+       // used to to get for each task the next location
+        double shortestDistancetoTask;
+
 
         TaskDataObject taskList = DataSource.instance(this.getApplicationContext()).getTaskByID(taskID);
+
+        // contains additionally the list of locations for each task. Due to compatibility issues the previous variable wasn´t deleted.
         List <TaskDataObject> taskListWithLocations = DataSource.instance(this.getApplicationContext()).getTaskByIDWithLocations(taskID);
 
         LocationManager locationManager = (LocationManager) this.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 
+        // Permision check
         if (ActivityCompat.checkSelfPermission(this.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d("TaskLocNotification", " Task werden nicht geladen, da Location nicht Activiert");
             return;
         }
 
+
         Location currLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
+        // Check if tasks available
         if(taskList == null){
             return;
         }
@@ -129,6 +137,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
 
 
+        shortestDistancetoTask = 50000; // initialization of variable. Used later to get for each task the next location
 
         for (TaskDataObject tempTaskList  : taskListWithLocations)
         {
@@ -137,6 +146,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
 
             if(locationlist != null){
+
                 for (LocationDataObject tempLocation : locationlist) { // Alle Locations zu einer Task aufrufen
 
                     Log.d("TaskLocNotification", "Innerhalb 2. for-Schleife");
@@ -147,14 +157,18 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
                     LatLng from = new LatLng(latitude,longitude);
                     LatLng to = new LatLng(toLatitude,toLongitude);
+
                     //distanzberechnung anhand Library (build.gradle beachten)
                     Double distance = SphericalUtil.computeDistanceBetween(from, to);
 
-                    convertDistance = distance.intValue();
-                    String conversion = distance.toString();
-                    notificationDistance = String.format("%.2f",distance);
+                    if(distance <= shortestDistancetoTask){ shortestDistancetoTask = distance;}
+
 
                 }
+
+
+                // Formatierung
+                notificationDistance = String.format("%.0f",shortestDistancetoTask);
             }
         }
 
@@ -165,7 +179,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_taskloc_launcher) //Icon shown in notification bar
                         .setContentTitle("TaskLoc") // Notification title
-                        .setContentText("Task: "+ taskList.getTitle() + " Distanz: "+convertDistance+" Meter"); // Message shown in notification bar
+                        .setContentText("Task: "+ taskList.getTitle() + " Distanz: "+notificationDistance+" Meter"); // Message shown in notification bar
 // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(this, DisplayTask.class);
         resultIntent.putExtra("taskID", taskID);
