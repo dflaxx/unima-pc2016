@@ -108,6 +108,8 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks, 
     }
 
     public void addTaskToGeofenceList(TaskDataObject tdo){
+        if(tdo.getLocations() == null)
+            return;
         for(LocationDataObject locationDataObject: tdo.getLocations()){
             mGeofenceList.add(new Geofence.Builder()
                     .setRequestId(String.valueOf(tdo.getId()))

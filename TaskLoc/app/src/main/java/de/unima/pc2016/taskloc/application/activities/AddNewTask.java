@@ -111,6 +111,10 @@ public class AddNewTask extends AppCompatActivity {
         this.buttonSave = (Button) findViewById(R.id.buttonSave);
         this.buttonAddLocation = (Button) findViewById(R.id.insertLocation);
 
+        if(editMode){
+            this.buttonAddLocation.setClickable(false);
+            this.buttonAddLocation.setEnabled(false);
+        }
         //View for the Dialog
         View addTaskLayout = (View) findViewById(R.id.addTask);
 

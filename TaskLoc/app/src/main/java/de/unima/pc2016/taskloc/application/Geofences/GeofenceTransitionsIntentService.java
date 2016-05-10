@@ -72,6 +72,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
             Log.d(TAG, "GeofencList Trigger " + triggeringGeofences.size() + " " + triggerList.size());
             //String geofenceTransitionDetails = getGeofenceTransitionDetails(this, geofenceTransition, triggeringGeofences);
             for (int i = 0; i < triggerList.size(); i++) {
+
                 createNotification(Integer.parseInt(triggerList.get(i).getRequestId()));
             }
 
